@@ -6,3 +6,7 @@ Teste de uso do display E-paper, cria uma tela alfanumérica de 25 linhas por 15
 
 ## epaper12
 Teste de uso do display E-paper, cria uma tela alfanumérica de 12 linhas por 16 caracteres, usando um fonte de 12x16 pontos.
+
+## tstcracha
+Adaptação do epaper12 para rodar no badge.
+

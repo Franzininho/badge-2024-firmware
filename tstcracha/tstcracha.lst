@@ -1,0 +1,1449 @@
+
+tstcracha.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .init:
+
+00000000 <InterruptVector>:
+void InterruptVector()         __attribute__((naked)) __attribute((section(".init"))) __attribute((weak,alias("InterruptVectorDefault")));
+void InterruptVectorDefault()  __attribute__((naked)) __attribute((section(".init")));
+
+void InterruptVectorDefault()
+{
+	asm volatile( "\n\
+   0:	3560006f          	j	356 <handle_reset>
+   4:	0000                	unimp
+   6:	0000                	unimp
+   8:	03ca                	slli	t2,t2,0x12
+   a:	0000                	unimp
+   c:	03c8                	addi	a0,sp,452
+	...
+  2e:	0000                	unimp
+  30:	03c8                	addi	a0,sp,452
+  32:	0000                	unimp
+  34:	0000                	unimp
+  36:	0000                	unimp
+  38:	03c8                	addi	a0,sp,452
+  3a:	0000                	unimp
+  3c:	0000                	unimp
+  3e:	0000                	unimp
+  40:	03c8                	addi	a0,sp,452
+  42:	0000                	unimp
+  44:	03c8                	addi	a0,sp,452
+  46:	0000                	unimp
+  48:	03c8                	addi	a0,sp,452
+  4a:	0000                	unimp
+  4c:	03c8                	addi	a0,sp,452
+  4e:	0000                	unimp
+  50:	03c8                	addi	a0,sp,452
+  52:	0000                	unimp
+  54:	03c8                	addi	a0,sp,452
+  56:	0000                	unimp
+  58:	03c8                	addi	a0,sp,452
+  5a:	0000                	unimp
+  5c:	03c8                	addi	a0,sp,452
+  5e:	0000                	unimp
+  60:	03c8                	addi	a0,sp,452
+  62:	0000                	unimp
+  64:	03c8                	addi	a0,sp,452
+  66:	0000                	unimp
+  68:	03c8                	addi	a0,sp,452
+  6a:	0000                	unimp
+  6c:	03c8                	addi	a0,sp,452
+  6e:	0000                	unimp
+  70:	03c8                	addi	a0,sp,452
+  72:	0000                	unimp
+  74:	03c8                	addi	a0,sp,452
+  76:	0000                	unimp
+  78:	03c8                	addi	a0,sp,452
+  7a:	0000                	unimp
+  7c:	03c8                	addi	a0,sp,452
+  7e:	0000                	unimp
+  80:	03c8                	addi	a0,sp,452
+  82:	0000                	unimp
+  84:	03c8                	addi	a0,sp,452
+  86:	0000                	unimp
+  88:	03c8                	addi	a0,sp,452
+  8a:	0000                	unimp
+  8c:	03c8                	addi	a0,sp,452
+  8e:	0000                	unimp
+  90:	03c8                	addi	a0,sp,452
+  92:	0000                	unimp
+  94:	03c8                	addi	a0,sp,452
+  96:	0000                	unimp
+  98:	03c8                	addi	a0,sp,452
+  9a:	0000                	unimp
+  9c:	0000                	unimp
+	...
+
+Disassembly of section .text:
+
+000000a0 <DelaySysTick>:
+#endif
+
+void DelaySysTick( uint32_t n )
+{
+#ifdef CH32V003
+	uint32_t targend = SysTick->CNT + n;
+      a0:	e000f7b7          	lui	a5,0xe000f
+      a4:	479c                	lw	a5,8(a5)
+	while( ((int32_t)( SysTick->CNT - targend )) < 0 );
+      a6:	e000f737          	lui	a4,0xe000f
+	uint32_t targend = SysTick->CNT + n;
+      aa:	953e                	add	a0,a0,a5
+	while( ((int32_t)( SysTick->CNT - targend )) < 0 );
+      ac:	471c                	lw	a5,8(a4)
+      ae:	8f89                	sub	a5,a5,a0
+      b0:	fe07cee3          	bltz	a5,ac <DelaySysTick+0xc>
+	uint32_t targend = SysTick->CNTL + n;
+	while( ((int32_t)( SysTick->CNTL - targend )) < 0 );
+#else
+	#error DelaySysTick not defined.
+#endif
+}
+      b4:	8082                	ret
+
+000000b6 <epd_wait_busy>:
+	SPI1->CTLR1 |= CTLR1_SPE_Set;
+}
+
+// Wait display controller not busy
+uint8_t epd_wait_busy()
+{
+      b6:	1151                	addi	sp,sp,-12
+      b8:	c222                	sw	s0,4(sp)
+      ba:	6429                	lui	s0,0xa
+      bc:	c406                	sw	ra,8(sp)
+      be:	c4140413          	addi	s0,s0,-959 # 9c41 <tstcracha.c.3e43e5fa+0x7877>
+  uint32_t timeout = 0;
+  while (EPAPER_BUSY()) {
+      c2:	400117b7          	lui	a5,0x40011
+      c6:	40078793          	addi	a5,a5,1024 # 40011400 <__global_pointer$+0x20010c00>
+      ca:	479c                	lw	a5,8(a5)
+      cc:	8b85                	andi	a5,a5,1
+      ce:	e791                	bnez	a5,da <epd_wait_busy+0x24>
+    if (timeout > 40000) {
+      return TRUE;
+    }
+    Delay_Ms(1);
+  }
+  return FALSE;
+      d0:	4501                	li	a0,0
+}
+      d2:	40a2                	lw	ra,8(sp)
+      d4:	4412                	lw	s0,4(sp)
+      d6:	0131                	addi	sp,sp,12
+      d8:	8082                	ret
+    if (timeout > 40000) {
+      da:	147d                	addi	s0,s0,-1
+      dc:	c411                	beqz	s0,e8 <epd_wait_busy+0x32>
+    Delay_Ms(1);
+      de:	6505                	lui	a0,0x1
+      e0:	77050513          	addi	a0,a0,1904 # 1770 <ch32v003fun.c.bb7b143d+0x241>
+      e4:	3f75                	jal	a0 <DelaySysTick>
+      e6:	bff1                	j	c2 <epd_wait_busy+0xc>
+      return TRUE;
+      e8:	4505                	li	a0,1
+      ea:	b7e5                	j	d2 <epd_wait_busy+0x1c>
+
+000000ec <epd_write_cmd>:
+
+void epd_write_cmd(uint8_t cmd)
+{
+	EPAPER_DC_LOW();
+      ec:	400117b7          	lui	a5,0x40011
+      f0:	00080737          	lui	a4,0x80
+      f4:	40e7a823          	sw	a4,1040(a5) # 40011410 <__global_pointer$+0x20010c10>
+	EPAPER_CS_LOW();
+      f8:	00100737          	lui	a4,0x100
+      fc:	40e7a823          	sw	a4,1040(a5)
+
+	while(!(SPI1->STATR & SPI_STATR_TXE))
+     100:	40013737          	lui	a4,0x40013
+     104:	00875783          	lhu	a5,8(a4) # 40013008 <__global_pointer$+0x20012808>
+     108:	8b89                	andi	a5,a5,2
+     10a:	dfed                	beqz	a5,104 <epd_write_cmd+0x18>
+		;
+	SPI1->DATAR = cmd;
+     10c:	0542                	slli	a0,a0,0x10
+     10e:	8141                	srli	a0,a0,0x10
+     110:	00a71623          	sh	a0,12(a4)
+	while(SPI1->STATR & SPI_STATR_BSY)
+     114:	40013737          	lui	a4,0x40013
+     118:	00875783          	lhu	a5,8(a4) # 40013008 <__global_pointer$+0x20012808>
+     11c:	0807f793          	andi	a5,a5,128
+     120:	ffe5                	bnez	a5,118 <epd_write_cmd+0x2c>
+		;
+
+	EPAPER_DC_HIGH();
+     122:	400117b7          	lui	a5,0x40011
+     126:	4721                	li	a4,8
+     128:	40e7a823          	sw	a4,1040(a5) # 40011410 <__global_pointer$+0x20010c10>
+	EPAPER_CS_HIGH();
+     12c:	4741                	li	a4,16
+     12e:	40e7a823          	sw	a4,1040(a5)
+}
+     132:	8082                	ret
+
+00000134 <epd_write_data>:
+
+void epd_write_data(uint8_t data)
+{
+	EPAPER_CS_LOW();
+     134:	00100737          	lui	a4,0x100
+     138:	400117b7          	lui	a5,0x40011
+     13c:	40e7a823          	sw	a4,1040(a5) # 40011410 <__global_pointer$+0x20010c10>
+
+	while(!(SPI1->STATR & SPI_STATR_TXE))
+     140:	40013737          	lui	a4,0x40013
+     144:	00875783          	lhu	a5,8(a4) # 40013008 <__global_pointer$+0x20012808>
+     148:	8b89                	andi	a5,a5,2
+     14a:	dfed                	beqz	a5,144 <epd_write_data+0x10>
+		;
+	SPI1->DATAR = data;
+     14c:	0542                	slli	a0,a0,0x10
+     14e:	8141                	srli	a0,a0,0x10
+     150:	00a71623          	sh	a0,12(a4)
+	while(SPI1->STATR & SPI_STATR_BSY)
+     154:	40013737          	lui	a4,0x40013
+     158:	00875783          	lhu	a5,8(a4) # 40013008 <__global_pointer$+0x20012808>
+     15c:	0807f793          	andi	a5,a5,128
+     160:	ffe5                	bnez	a5,158 <epd_write_data+0x24>
+		;
+
+	EPAPER_CS_HIGH();
+     162:	400117b7          	lui	a5,0x40011
+     166:	4741                	li	a4,16
+     168:	40e7a823          	sw	a4,1040(a5) # 40011410 <__global_pointer$+0x20010c10>
+}
+     16c:	8082                	ret
+
+0000016e <epd_send_screen>:
+}
+
+
+// Send the graphic screen data
+// TODO: optimize code
+void epd_send_screen () {
+     16e:	1151                	addi	sp,sp,-12
+     170:	c422                	sw	s0,8(sp)
+	EPAPER_CS_LOW();
+     172:	400117b7          	lui	a5,0x40011
+     176:	00100737          	lui	a4,0x100
+void epd_send_screen () {
+     17a:	c226                	sw	s1,4(sp)
+	EPAPER_CS_LOW();
+     17c:	40e7a823          	sw	a4,1040(a5) # 40011410 <__global_pointer$+0x20010c10>
+
+	// Send pixels corresponding to the alphanumeric screen
+	for (int c = 0; c < NCOL; c++) {
+     180:	80818793          	addi	a5,gp,-2040 # 20000008 <screen>
+		for (int cg = 0; cg < 12; cg++) {
+	    for (int l = 0; l < NLIN; l++) {
+				uint8_t car = screen[l*NCOL + (NCOL-c-1)];
+				const uint8_t *p = &console_font_12x16[car*24 + cg*2];
+     184:	4581                	li	a1,0
+	EPAPER_CS_LOW();
+     186:	463d                	li	a2,15
+     188:	c03e                	sw	a5,0(sp)
+				const uint8_t *p = &console_font_12x16[car*24 + cg*2];
+     18a:	73800593          	li	a1,1848
+				while(!(SPI1->STATR & SPI_STATR_TXE))
+     18e:	40013737          	lui	a4,0x40013
+					;
+				SPI1->DATAR = *p;
+			}
+			while(!(SPI1->STATR & SPI_STATR_TXE))
+			;
+			SPI1->DATAR = 0xFF;
+     192:	0ff00413          	li	s0,255
+		for (int cg = 0; cg < 12; cg++) {
+     196:	4681                	li	a3,0
+	    for (int l = 0; l < NLIN; l++) {
+     198:	43b1                	li	t2,12
+     19a:	a899                	j	1f0 <epd_send_screen+0x82>
+				const uint8_t *p = &console_font_12x16[car*24 + cg*2];
+     19c:	00034283          	lbu	t0,0(t1)
+     1a0:	00129793          	slli	a5,t0,0x1
+     1a4:	9796                	add	a5,a5,t0
+     1a6:	078a                	slli	a5,a5,0x2
+     1a8:	97b6                	add	a5,a5,a3
+     1aa:	0786                	slli	a5,a5,0x1
+     1ac:	00b784b3          	add	s1,a5,a1
+				while(!(SPI1->STATR & SPI_STATR_TXE))
+     1b0:	00875283          	lhu	t0,8(a4) # 40013008 <__global_pointer$+0x20012808>
+     1b4:	0022f293          	andi	t0,t0,2
+     1b8:	fe028ce3          	beqz	t0,1b0 <epd_send_screen+0x42>
+				SPI1->DATAR = *p++;
+     1bc:	97ae                	add	a5,a5,a1
+     1be:	0007c783          	lbu	a5,0(a5)
+     1c2:	00f71623          	sh	a5,12(a4)
+				while(!(SPI1->STATR & SPI_STATR_TXE))
+     1c6:	00875783          	lhu	a5,8(a4)
+     1ca:	8b89                	andi	a5,a5,2
+     1cc:	dfed                	beqz	a5,1c6 <epd_send_screen+0x58>
+				SPI1->DATAR = *p;
+     1ce:	0014c783          	lbu	a5,1(s1)
+	    for (int l = 0; l < NLIN; l++) {
+     1d2:	0505                	addi	a0,a0,1
+     1d4:	0341                	addi	t1,t1,16
+				SPI1->DATAR = *p;
+     1d6:	00f71623          	sh	a5,12(a4)
+	    for (int l = 0; l < NLIN; l++) {
+     1da:	fc7511e3          	bne	a0,t2,19c <epd_send_screen+0x2e>
+			while(!(SPI1->STATR & SPI_STATR_TXE))
+     1de:	00875783          	lhu	a5,8(a4)
+     1e2:	8b89                	andi	a5,a5,2
+     1e4:	dfed                	beqz	a5,1de <epd_send_screen+0x70>
+			SPI1->DATAR = 0xFF;
+     1e6:	00871623          	sh	s0,12(a4)
+		for (int cg = 0; cg < 12; cg++) {
+     1ea:	0685                	addi	a3,a3,1
+     1ec:	00768763          	beq	a3,t2,1fa <epd_send_screen+0x8c>
+	    for (int l = 0; l < NLIN; l++) {
+     1f0:	4782                	lw	a5,0(sp)
+     1f2:	4501                	li	a0,0
+     1f4:	00c78333          	add	t1,a5,a2
+     1f8:	b755                	j	19c <epd_send_screen+0x2e>
+	for (int c = 0; c < NCOL; c++) {
+     1fa:	167d                	addi	a2,a2,-1
+     1fc:	57fd                	li	a5,-1
+     1fe:	f8f61ce3          	bne	a2,a5,196 <epd_send_screen+0x28>
+     202:	4721                	li	a4,8
+		}
+	}
+	// Clear remaining 8 graphical lines
+	for (int lg = 0; lg < 8; lg++) {
+		for (int c = 0; c < 25; c++) {
+			while(!(SPI1->STATR & SPI_STATR_TXE))
+     204:	40013637          	lui	a2,0x40013
+				;
+			SPI1->DATAR = 0xFF;
+     208:	0ff00593          	li	a1,255
+	EPAPER_CS_LOW();
+     20c:	47e5                	li	a5,25
+			while(!(SPI1->STATR & SPI_STATR_TXE))
+     20e:	00865683          	lhu	a3,8(a2) # 40013008 <__global_pointer$+0x20012808>
+     212:	8a89                	andi	a3,a3,2
+     214:	deed                	beqz	a3,20e <epd_send_screen+0xa0>
+			SPI1->DATAR = 0xFF;
+     216:	00b61623          	sh	a1,12(a2)
+		for (int c = 0; c < 25; c++) {
+     21a:	17fd                	addi	a5,a5,-1
+     21c:	fbed                	bnez	a5,20e <epd_send_screen+0xa0>
+	for (int lg = 0; lg < 8; lg++) {
+     21e:	177d                	addi	a4,a4,-1
+     220:	f775                	bnez	a4,20c <epd_send_screen+0x9e>
+		}
+	}
+
+	// Wait for last byte shifted out
+	while(SPI1->STATR & SPI_STATR_BSY)
+     222:	40013737          	lui	a4,0x40013
+     226:	00875783          	lhu	a5,8(a4) # 40013008 <__global_pointer$+0x20012808>
+     22a:	0807f793          	andi	a5,a5,128
+     22e:	ffe5                	bnez	a5,226 <epd_send_screen+0xb8>
+		;
+	EPAPER_CS_HIGH();
+}
+     230:	4422                	lw	s0,8(sp)
+	EPAPER_CS_HIGH();
+     232:	400117b7          	lui	a5,0x40011
+     236:	4741                	li	a4,16
+     238:	40e7a823          	sw	a4,1040(a5) # 40011410 <__global_pointer$+0x20010c10>
+}
+     23c:	4492                	lw	s1,4(sp)
+     23e:	0131                	addi	sp,sp,12
+     240:	8082                	ret
+
+00000242 <epd_setpos.constprop.0>:
+void epd_setpos(uint16_t x, uint16_t y)
+     242:	1151                	addi	sp,sp,-12
+	epd_write_cmd(CMD_SET_RAM_XADDR_COUNT);
+     244:	04e00513          	li	a0,78
+void epd_setpos(uint16_t x, uint16_t y)
+     248:	c406                	sw	ra,8(sp)
+	epd_write_cmd(CMD_SET_RAM_XADDR_COUNT);
+     24a:	354d                	jal	ec <epd_write_cmd>
+	epd_write_data(_x);
+     24c:	4501                	li	a0,0
+     24e:	35dd                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_SET_RAM_YADDR_COUNT);
+     250:	04f00513          	li	a0,79
+     254:	3d61                	jal	ec <epd_write_cmd>
+	epd_write_data(_y & 0xff);
+     256:	0c700513          	li	a0,199
+     25a:	3de9                	jal	134 <epd_write_data>
+}
+     25c:	40a2                	lw	ra,8(sp)
+	epd_write_data((_y >> 8) & 0x01);
+     25e:	4501                	li	a0,0
+}
+     260:	0131                	addi	sp,sp,12
+	epd_write_data((_y >> 8) & 0x01);
+     262:	bdc9                	j	134 <epd_write_data>
+
+00000264 <epd_refresh>:
+
+// Update image on the display
+void epd_refresh() {
+     264:	1151                	addi	sp,sp,-12
+     266:	c222                	sw	s0,4(sp)
+	// Turnon if necessary
+	if (hibernating) {
+     268:	20000437          	lui	s0,0x20000
+     26c:	00040413          	mv	s0,s0
+     270:	00044783          	lbu	a5,0(s0) # 20000000 <hibernating>
+void epd_refresh() {
+     274:	c406                	sw	ra,8(sp)
+     276:	c026                	sw	s1,0(sp)
+	if (hibernating) {
+     278:	0a078763          	beqz	a5,326 <epd_refresh+0xc2>
+	EPAPER_RST_LOW();
+     27c:	400114b7          	lui	s1,0x40011
+     280:	000407b7          	lui	a5,0x40
+     284:	40f4a823          	sw	a5,1040(s1) # 40011410 <__global_pointer$+0x20010c10>
+	Delay_Ms(50);
+     288:	000497b7          	lui	a5,0x49
+     28c:	3e078513          	addi	a0,a5,992 # 493e0 <tstcracha.c.3e43e5fa+0x47016>
+     290:	3d01                	jal	a0 <DelaySysTick>
+	EPAPER_RST_HIGH();
+     292:	4711                	li	a4,4
+	Delay_Ms(50);
+     294:	000497b7          	lui	a5,0x49
+	EPAPER_RST_HIGH();
+     298:	40e4a823          	sw	a4,1040(s1)
+	Delay_Ms(50);
+     29c:	3e078513          	addi	a0,a5,992 # 493e0 <tstcracha.c.3e43e5fa+0x47016>
+     2a0:	3501                	jal	a0 <DelaySysTick>
+	hibernating = FALSE;
+     2a2:	00040023          	sb	zero,0(s0)
+	if (epd_wait_busy()) {
+     2a6:	3d01                	jal	b6 <epd_wait_busy>
+     2a8:	06051f63          	bnez	a0,326 <epd_refresh+0xc2>
+	epd_write_cmd(CMD_SWRESET);
+     2ac:	4549                	li	a0,18
+     2ae:	3d3d                	jal	ec <epd_write_cmd>
+	Delay_Ms(10);
+     2b0:	653d                	lui	a0,0xf
+     2b2:	a6050513          	addi	a0,a0,-1440 # ea60 <tstcracha.c.3e43e5fa+0xc696>
+     2b6:	33ed                	jal	a0 <DelaySysTick>
+	if (epd_wait_busy()) {
+     2b8:	3bfd                	jal	b6 <epd_wait_busy>
+     2ba:	e535                	bnez	a0,326 <epd_refresh+0xc2>
+	epd_write_cmd(CMD_DRV_OUT_CTRL);
+     2bc:	4505                	li	a0,1
+     2be:	353d                	jal	ec <epd_write_cmd>
+	epd_write_data(0xC7);
+     2c0:	0c700513          	li	a0,199
+     2c4:	3d85                	jal	134 <epd_write_data>
+	epd_write_data(0x00);
+     2c6:	4501                	li	a0,0
+     2c8:	35b5                	jal	134 <epd_write_data>
+	epd_write_data(0x01);
+     2ca:	4505                	li	a0,1
+     2cc:	35a5                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_DATA_ENTRY_MODE);
+     2ce:	4545                	li	a0,17
+     2d0:	3d31                	jal	ec <epd_write_cmd>
+	epd_write_data(0x01);
+     2d2:	4505                	li	a0,1
+     2d4:	3585                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_SET_RAM_XADDR);
+     2d6:	04400513          	li	a0,68
+     2da:	3d09                	jal	ec <epd_write_cmd>
+	epd_write_data(0x00);
+     2dc:	4501                	li	a0,0
+     2de:	3d99                	jal	134 <epd_write_data>
+	epd_write_data(0x18);
+     2e0:	4561                	li	a0,24
+     2e2:	3d89                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_SET_RAM_YADDR);
+     2e4:	04500513          	li	a0,69
+     2e8:	3511                	jal	ec <epd_write_cmd>
+	epd_write_data(0xC7);
+     2ea:	0c700513          	li	a0,199
+     2ee:	3599                	jal	134 <epd_write_data>
+	epd_write_data(0x00);
+     2f0:	4501                	li	a0,0
+     2f2:	3589                	jal	134 <epd_write_data>
+	epd_write_data(0x00);
+     2f4:	4501                	li	a0,0
+     2f6:	3d3d                	jal	134 <epd_write_data>
+	epd_write_data(0x00);
+     2f8:	4501                	li	a0,0
+     2fa:	3d2d                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_BORDER_WAVE);
+     2fc:	03c00513          	li	a0,60
+     300:	33f5                	jal	ec <epd_write_cmd>
+	epd_write_data(0x05);
+     302:	4515                	li	a0,5
+     304:	3d05                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_READ_TEMPERATURE);
+     306:	4561                	li	a0,24
+     308:	33d5                	jal	ec <epd_write_cmd>
+	epd_write_data(0x80);
+     30a:	08000513          	li	a0,128
+     30e:	351d                	jal	134 <epd_write_data>
+	epd_setpos(0,0);
+     310:	3f0d                	jal	242 <epd_setpos.constprop.0>
+	epd_write_cmd(CMD_DISP_UPD_CTL);
+     312:	02200513          	li	a0,34
+     316:	3bd9                	jal	ec <epd_write_cmd>
+	epd_write_data(0xf8);
+     318:	0f800513          	li	a0,248
+     31c:	3d21                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_ACTIVE_DISP_UPD_SEQ);
+     31e:	02000513          	li	a0,32
+     322:	33e9                	jal	ec <epd_write_cmd>
+	return epd_wait_busy();
+     324:	3b49                	jal	b6 <epd_wait_busy>
+		epd_init();
+	}
+
+	// Fill RED RAM
+	epd_setpos(0, 0);
+     326:	3f31                	jal	242 <epd_setpos.constprop.0>
+	epd_write_cmd(CMD_WRITE_REDRAM);
+     328:	02600513          	li	a0,38
+     32c:	33c1                	jal	ec <epd_write_cmd>
+	epd_send_screen();
+     32e:	3581                	jal	16e <epd_send_screen>
+
+	// Fill BW RAM
+	epd_setpos(0, 0);
+     330:	3f09                	jal	242 <epd_setpos.constprop.0>
+	epd_write_cmd(CMD_WRITE_RAM);
+     332:	02400513          	li	a0,36
+     336:	3b5d                	jal	ec <epd_write_cmd>
+	epd_send_screen();
+     338:	3d1d                	jal	16e <epd_send_screen>
+
+	// Update the display
+	epd_write_cmd(CMD_DISP_UPD_CTL);
+     33a:	02200513          	li	a0,34
+     33e:	337d                	jal	ec <epd_write_cmd>
+	epd_write_data(0xF4);
+     340:	0f400513          	li	a0,244
+     344:	3bc5                	jal	134 <epd_write_data>
+	epd_write_cmd(CMD_ACTIVE_DISP_UPD_SEQ);
+     346:	02000513          	li	a0,32
+     34a:	334d                	jal	ec <epd_write_cmd>
+
+	epd_wait_busy();
+}
+     34c:	4412                	lw	s0,4(sp)
+     34e:	40a2                	lw	ra,8(sp)
+     350:	4482                	lw	s1,0(sp)
+     352:	0131                	addi	sp,sp,12
+	epd_wait_busy();
+     354:	b38d                	j	b6 <epd_wait_busy>
+
+00000356 <handle_reset>:
+	asm volatile( "\n\
+     356:	20000197          	auipc	gp,0x20000
+     35a:	4aa18193          	addi	gp,gp,1194 # 20000800 <__global_pointer$>
+     35e:	00018113          	mv	sp,gp
+     362:	08000513          	li	a0,128
+     366:	30051073          	csrw	mstatus,a0
+     36a:	468d                	li	a3,3
+     36c:	00000517          	auipc	a0,0x0
+     370:	c9450513          	addi	a0,a0,-876 # 0 <InterruptVector>
+     374:	8d55                	or	a0,a0,a3
+     376:	30551073          	csrw	mtvec,a0
+asm volatile(
+     37a:	80818513          	addi	a0,gp,-2040 # 20000008 <screen>
+     37e:	8c818593          	addi	a1,gp,-1848 # 200000c8 <_ebss>
+     382:	4601                	li	a2,0
+     384:	00b55663          	bge	a0,a1,390 <handle_reset+0x3a>
+     388:	c110                	sw	a2,0(a0)
+     38a:	0511                	addi	a0,a0,4
+     38c:	feb54ee3          	blt	a0,a1,388 <handle_reset+0x32>
+     390:	00002517          	auipc	a0,0x2
+     394:	ba850513          	addi	a0,a0,-1112 # 1f38 <_data_lma>
+     398:	20000597          	auipc	a1,0x20000
+     39c:	c6858593          	addi	a1,a1,-920 # 20000000 <hibernating>
+     3a0:	80818613          	addi	a2,gp,-2040 # 20000008 <screen>
+     3a4:	00c58863          	beq	a1,a2,3b4 <handle_reset+0x5e>
+     3a8:	4114                	lw	a3,0(a0)
+     3aa:	c194                	sw	a3,0(a1)
+     3ac:	0511                	addi	a0,a0,4
+     3ae:	0591                	addi	a1,a1,4
+     3b0:	fec59ae3          	bne	a1,a2,3a4 <handle_reset+0x4e>
+	SysTick->CTLR = 1;
+     3b4:	e000f7b7          	lui	a5,0xe000f
+     3b8:	4705                	li	a4,1
+     3ba:	c398                	sw	a4,0(a5)
+asm volatile(
+     3bc:	49200793          	li	a5,1170
+     3c0:	34179073          	csrw	mepc,a5
+     3c4:	30200073          	mret
+
+000003c8 <ADC1_IRQHandler>:
+	asm volatile( "1: j 1b" );
+     3c8:	a001                	j	3c8 <ADC1_IRQHandler>
+
+000003ca <NMI_Handler>:
+	RCC->INTR |= RCC_CSSC;	// clear the clock security int flag
+     3ca:	40021737          	lui	a4,0x40021
+     3ce:	471c                	lw	a5,8(a4)
+     3d0:	008006b7          	lui	a3,0x800
+     3d4:	8fd5                	or	a5,a5,a3
+     3d6:	c71c                	sw	a5,8(a4)
+
+000003d8 <strlen>:
+size_t strlen(const char *s) { const char *a = s;for (; *s; s++);return s-a; }
+     3d8:	87aa                	mv	a5,a0
+     3da:	0007c703          	lbu	a4,0(a5) # e000f000 <__global_pointer$+0xc000e800>
+     3de:	e701                	bnez	a4,3e6 <strlen+0xe>
+     3e0:	40a78533          	sub	a0,a5,a0
+     3e4:	8082                	ret
+     3e6:	0785                	addi	a5,a5,1
+     3e8:	bfcd                	j	3da <strlen+0x2>
+
+000003ea <memset>:
+void *memset(void *dest, int c, size_t n) { unsigned char *s = dest; for (; n; n--, s++) *s = c; return dest; }
+     3ea:	962a                	add	a2,a2,a0
+     3ec:	87aa                	mv	a5,a0
+     3ee:	00c79363          	bne	a5,a2,3f4 <memset+0xa>
+     3f2:	8082                	ret
+     3f4:	00b78023          	sb	a1,0(a5)
+     3f8:	0785                	addi	a5,a5,1
+     3fa:	bfd5                	j	3ee <memset+0x4>
+
+000003fc <memcpy>:
+{
+     3fc:	4781                	li	a5,0
+	for (; n; n--) *d++ = *s++;
+     3fe:	00f61363          	bne	a2,a5,404 <memcpy+0x8>
+}
+     402:	8082                	ret
+	for (; n; n--) *d++ = *s++;
+     404:	00f58733          	add	a4,a1,a5
+     408:	00074683          	lbu	a3,0(a4) # 40021000 <__global_pointer$+0x20020800>
+     40c:	00f50733          	add	a4,a0,a5
+     410:	0785                	addi	a5,a5,1
+     412:	00d70023          	sb	a3,0(a4)
+     416:	b7e5                	j	3fe <memcpy+0x2>
+
+00000418 <epd_write.constprop.0>:
+void epd_write (uint8_t l, uint8_t c, uint8_t *text) {
+     418:	1141                	addi	sp,sp,-16
+     41a:	c422                	sw	s0,8(sp)
+     41c:	842a                	mv	s0,a0
+	memcpy (screen+(l*NCOL)+c, text, strlen((char *) text));
+     41e:	852e                	mv	a0,a1
+void epd_write (uint8_t l, uint8_t c, uint8_t *text) {
+     420:	c606                	sw	ra,12(sp)
+	memcpy (screen+(l*NCOL)+c, text, strlen((char *) text));
+     422:	c02e                	sw	a1,0(sp)
+     424:	3f55                	jal	3d8 <strlen>
+     426:	862a                	mv	a2,a0
+     428:	0412                	slli	s0,s0,0x4
+     42a:	80818513          	addi	a0,gp,-2040 # 20000008 <screen>
+     42e:	9522                	add	a0,a0,s0
+}
+     430:	4422                	lw	s0,8(sp)
+	memcpy (screen+(l*NCOL)+c, text, strlen((char *) text));
+     432:	4582                	lw	a1,0(sp)
+}
+     434:	40b2                	lw	ra,12(sp)
+     436:	0141                	addi	sp,sp,16
+	memcpy (screen+(l*NCOL)+c, text, strlen((char *) text));
+     438:	b7d1                	j	3fc <memcpy>
+
+0000043a <SystemInit>:
+	// CH32V003 flash latency
+#if defined(CH32X03x)
+	FLASH->ACTLR = FLASH_ACTLR_LATENCY_2;                   // +2 Cycle Latency (Recommended per TRM)
+#elif defined(CH32V003)
+	#if FUNCONF_SYSTEM_CORE_CLOCK > 25000000
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_1;               // +1 Cycle Latency
+     43a:	400227b7          	lui	a5,0x40022
+     43e:	4705                	li	a4,1
+     440:	c398                	sw	a4,0(a5)
+#if defined(FUNCONF_USE_HSI) && FUNCONF_USE_HSI
+	#if defined(CH32V30x) || defined(CH32V20x) || defined(CH32V10x)
+		EXTEN->EXTEN_CTR |= EXTEN_PLL_HSI_PRE;
+	#endif
+	#if defined(FUNCONF_USE_PLL) && FUNCONF_USE_PLL
+		RCC->CFGR0 = BASE_CFGR0;
+     442:	400217b7          	lui	a5,0x40021
+		RCC->CTLR  = BASE_CTLR | RCC_HSION | RCC_PLLON; 			// Use HSI, enable PLL.
+     446:	01080737          	lui	a4,0x1080
+		RCC->CFGR0 = BASE_CFGR0;
+     44a:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x20020804>
+		RCC->CTLR  = BASE_CTLR | RCC_HSION | RCC_PLLON; 			// Use HSI, enable PLL.
+     44e:	08170713          	addi	a4,a4,129 # 1080081 <tstcracha.c.3e43e5fa+0x107dcb7>
+     452:	c398                	sw	a4,0(a5)
+	#else
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_1;       		// +1 Cycle Latency
+	#endif
+#endif
+
+	RCC->INTR  = 0x009F0000;                               // Clear PLL, CSSC, HSE, HSI and LSI ready flags.
+     454:	009f0737          	lui	a4,0x9f0
+     458:	c798                	sw	a4,8(a5)
+
+#if defined(FUNCONF_USE_PLL) && FUNCONF_USE_PLL
+	while((RCC->CTLR & RCC_PLLRDY) == 0);                       	// Wait till PLL is ready
+     45a:	020006b7          	lui	a3,0x2000
+     45e:	40021737          	lui	a4,0x40021
+     462:	431c                	lw	a5,0(a4)
+     464:	8ff5                	and	a5,a5,a3
+     466:	dff5                	beqz	a5,462 <SystemInit+0x28>
+	uint32_t tmp32 = RCC->CFGR0 & ~(0x03);							// clr the SW
+     468:	435c                	lw	a5,4(a4)
+	RCC->CFGR0 = tmp32 | RCC_SW_PLL;                       			// Select PLL as system clock source
+	while ((RCC->CFGR0 & (uint32_t)RCC_SWS) != (uint32_t)0x08); 	// Wait till PLL is used as system clock source
+     46a:	400216b7          	lui	a3,0x40021
+	uint32_t tmp32 = RCC->CFGR0 & ~(0x03);							// clr the SW
+     46e:	9bf1                	andi	a5,a5,-4
+	RCC->CFGR0 = tmp32 | RCC_SW_PLL;                       			// Select PLL as system clock source
+     470:	0027e793          	ori	a5,a5,2
+     474:	c35c                	sw	a5,4(a4)
+	while ((RCC->CFGR0 & (uint32_t)RCC_SWS) != (uint32_t)0x08); 	// Wait till PLL is used as system clock source
+     476:	4721                	li	a4,8
+     478:	42dc                	lw	a5,4(a3)
+     47a:	8bb1                	andi	a5,a5,12
+     47c:	fee79ee3          	bne	a5,a4,478 <SystemInit+0x3e>
+	*DMDATA1 = 0x0;
+     480:	e00007b7          	lui	a5,0xe0000
+     484:	0e07ac23          	sw	zero,248(a5) # e00000f8 <__global_pointer$+0xbffff8f8>
+	*DMDATA0 = 0x80;
+     488:	08000713          	li	a4,128
+     48c:	0ee7aa23          	sw	a4,244(a5)
+	SetupUART( UART_BRR );
+#endif
+#if defined( FUNCONF_USE_DEBUGPRINTF ) && FUNCONF_USE_DEBUGPRINTF
+	SetupDebugPrintf();
+#endif
+}
+     490:	8082                	ret
+
+00000492 <main>:
+
+		// Update epaper
+		epd_refresh();
+}
+
+int main() {
+     492:	1151                	addi	sp,sp,-12
+     494:	c406                	sw	ra,8(sp)
+     496:	c222                	sw	s0,4(sp)
+     498:	c026                	sw	s1,0(sp)
+	// 48MHz internal clock
+	SystemInit();
+     49a:	3745                	jal	43a <SystemInit>
+	RCC->APB2PCENR |= RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOA | RCC_APB2Periph_SPI1;
+     49c:	40021737          	lui	a4,0x40021
+     4a0:	4f1c                	lw	a5,24(a4)
+     4a2:	6505                	lui	a0,0x1
+     4a4:	03450693          	addi	a3,a0,52 # 1034 <console_font_12x16+0x8fc>
+     4a8:	8fd5                	or	a5,a5,a3
+	SHUTDOWN_PORT->CFGLR &= ~(0xf<<(4*SHUTDOWN_PIN));
+     4aa:	40011437          	lui	s0,0x40011
+	RCC->APB2PCENR |= RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOA | RCC_APB2Periph_SPI1;
+     4ae:	cf1c                	sw	a5,24(a4)
+	SHUTDOWN_PORT->CFGLR &= ~(0xf<<(4*SHUTDOWN_PIN));
+     4b0:	401c                	lw	a5,0(s0)
+	LED1_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED1_PIN);
+     4b2:	64c1                	lui	s1,0x10
+	LED1_OFF();
+     4b4:	001002b7          	lui	t0,0x100
+	SHUTDOWN_PORT->CFGLR &= ~(0xf<<(4*SHUTDOWN_PIN));
+     4b8:	9bc1                	andi	a5,a5,-16
+     4ba:	c01c                	sw	a5,0(s0)
+	SHUTDOWN_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*SHUTDOWN_PIN);
+     4bc:	401c                	lw	a5,0(s0)
+	LED2_PORT->CFGLR &= ~(0xf<<(4*LED2_PIN));
+     4be:	10000637          	lui	a2,0x10000
+	LED2_OFF();
+     4c2:	00800337          	lui	t1,0x800
+	SHUTDOWN_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*SHUTDOWN_PIN);
+     4c6:	0017e793          	ori	a5,a5,1
+     4ca:	c01c                	sw	a5,0(s0)
+	POWER_ON();
+     4cc:	4785                	li	a5,1
+     4ce:	c81c                	sw	a5,16(s0)
+	LED1_PORT->CFGLR &= ~(0xf<<(4*LED1_PIN));
+     4d0:	4018                	lw	a4,0(s0)
+     4d2:	fff107b7          	lui	a5,0xfff10
+     4d6:	17fd                	addi	a5,a5,-1
+     4d8:	8f7d                	and	a4,a4,a5
+     4da:	c018                	sw	a4,0(s0)
+	LED1_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED1_PIN);
+     4dc:	4018                	lw	a4,0(s0)
+	LED3_OFF();
+     4de:	000405b7          	lui	a1,0x40
+	EPAPER_DC_PORT->CFGLR &= ~(0xf<<(4*EPAPER_DC_PIN));
+     4e2:	73c5                	lui	t2,0xffff1
+	LED1_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED1_PIN);
+     4e4:	8f45                	or	a4,a4,s1
+     4e6:	c018                	sw	a4,0(s0)
+	LED1_OFF();
+     4e8:	00542823          	sw	t0,16(s0) # 40011010 <__global_pointer$+0x20010810>
+	LED2_PORT->CFGLR &= ~(0xf<<(4*LED2_PIN));
+     4ec:	4014                	lw	a3,0(s0)
+     4ee:	fff60713          	addi	a4,a2,-1 # fffffff <tstcracha.c.3e43e5fa+0xfffdc35>
+	EPAPER_DC_PORT->CFGLR &= ~(0xf<<(4*EPAPER_DC_PIN));
+     4f2:	13fd                	addi	t2,t2,-1
+	LED2_PORT->CFGLR &= ~(0xf<<(4*LED2_PIN));
+     4f4:	8ef9                	and	a3,a3,a4
+     4f6:	c014                	sw	a3,0(s0)
+	LED2_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED2_PIN);
+     4f8:	4018                	lw	a4,0(s0)
+	LED3_PORT->CFGLR &= ~(0xf<<(4*LED3_PIN));
+     4fa:	76fd                	lui	a3,0xfffff
+     4fc:	0ff68693          	addi	a3,a3,255 # fffff0ff <__global_pointer$+0xdfffe8ff>
+	LED2_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED2_PIN);
+     500:	8f51                	or	a4,a4,a2
+     502:	c018                	sw	a4,0(s0)
+	LED2_OFF();
+     504:	00642823          	sw	t1,16(s0)
+	LED3_PORT->CFGLR &= ~(0xf<<(4*LED3_PIN));
+     508:	80042603          	lw	a2,-2048(s0)
+     50c:	8e75                	and	a2,a2,a3
+     50e:	80c42023          	sw	a2,-2048(s0)
+	LED3_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED3_PIN);
+     512:	80042603          	lw	a2,-2048(s0)
+     516:	10066613          	ori	a2,a2,256
+     51a:	80c42023          	sw	a2,-2048(s0)
+	LED3_OFF();
+     51e:	80b42823          	sw	a1,-2032(s0)
+	LED4_PORT->CFGLR &= ~(0xf<<(4*LED4_PIN));
+     522:	80042603          	lw	a2,-2048(s0)
+     526:	f0f67613          	andi	a2,a2,-241
+     52a:	80c42023          	sw	a2,-2048(s0)
+	LED4_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED4_PIN);
+     52e:	80042603          	lw	a2,-2048(s0)
+     532:	01066613          	ori	a2,a2,16
+     536:	80c42023          	sw	a2,-2048(s0)
+	LED4_OFF();
+     53a:	80b42823          	sw	a1,-2032(s0)
+	BTN_PORT->CFGLR &= ~0xf<<(4*BTN_PIN);
+     53e:	4010                	lw	a2,0(s0)
+     540:	75c1                	lui	a1,0xffff0
+     542:	8e6d                	and	a2,a2,a1
+     544:	c010                	sw	a2,0(s0)
+	BTN_PORT->CFGLR |= (GPIO_Speed_In | GPIO_CNF_IN_FLOATING)<<(4*BTN_PIN);
+     546:	4010                	lw	a2,0(s0)
+     548:	6591                	lui	a1,0x4
+     54a:	8e4d                	or	a2,a2,a1
+     54c:	c010                	sw	a2,0(s0)
+	EPAPER_RST_PORT->CFGLR &= ~(0xf<<(4*EPAPER_RST_PIN));
+     54e:	40042583          	lw	a1,1024(s0)
+	GPIOC->CFGLR &= ~(0xf<<(4*5));
+     552:	ff100637          	lui	a2,0xff100
+     556:	167d                	addi	a2,a2,-1
+	EPAPER_RST_PORT->CFGLR &= ~(0xf<<(4*EPAPER_RST_PIN));
+     558:	8eed                	and	a3,a3,a1
+     55a:	40d42023          	sw	a3,1024(s0)
+	EPAPER_RST_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*EPAPER_RST_PIN);
+     55e:	40042683          	lw	a3,1024(s0)
+     562:	1006e693          	ori	a3,a3,256
+     566:	40d42023          	sw	a3,1024(s0)
+	EPAPER_RST_HIGH();
+     56a:	4691                	li	a3,4
+     56c:	40d42823          	sw	a3,1040(s0)
+	EPAPER_CS_PORT->CFGLR &= ~(0xf<<(4*EPAPER_CS_PIN));
+     570:	40042583          	lw	a1,1024(s0)
+     574:	8fed                	and	a5,a5,a1
+     576:	40f42023          	sw	a5,1024(s0)
+	EPAPER_CS_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*EPAPER_CS_PIN);
+     57a:	40042783          	lw	a5,1024(s0)
+	EPAPER_CS_HIGH();
+     57e:	45c1                	li	a1,16
+	EPAPER_CS_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*EPAPER_CS_PIN);
+     580:	8fc5                	or	a5,a5,s1
+     582:	40f42023          	sw	a5,1024(s0)
+	EPAPER_CS_HIGH();
+     586:	40b42823          	sw	a1,1040(s0)
+	EPAPER_DC_PORT->CFGLR &= ~(0xf<<(4*EPAPER_DC_PIN));
+     58a:	40042783          	lw	a5,1024(s0)
+     58e:	0077f7b3          	and	a5,a5,t2
+     592:	40f42023          	sw	a5,1024(s0)
+	EPAPER_DC_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*EPAPER_DC_PIN);
+     596:	40042783          	lw	a5,1024(s0)
+     59a:	8fc9                	or	a5,a5,a0
+     59c:	40f42023          	sw	a5,1024(s0)
+	EPAPER_DC_LOW();
+     5a0:	000807b7          	lui	a5,0x80
+     5a4:	40f42823          	sw	a5,1040(s0)
+	EPAPER_BUSY_PORT->CFGLR &= ~0xf<<(4*EPAPER_BUSY_PIN);
+     5a8:	40042783          	lw	a5,1024(s0)
+     5ac:	9bc1                	andi	a5,a5,-16
+     5ae:	40f42023          	sw	a5,1024(s0)
+	EPAPER_BUSY_PORT->CFGLR |= (GPIO_Speed_In | GPIO_CNF_IN_FLOATING)<<(4*EPAPER_BUSY_PIN);
+     5b2:	40042783          	lw	a5,1024(s0)
+     5b6:	0047e793          	ori	a5,a5,4
+     5ba:	40f42023          	sw	a5,1024(s0)
+	GPIOC->CFGLR &= ~(0xf<<(4*5));
+     5be:	401c                	lw	a5,0(s0)
+     5c0:	8ff1                	and	a5,a5,a2
+     5c2:	c01c                	sw	a5,0(s0)
+	GPIOC->CFGLR |= (GPIO_Speed_50MHz | GPIO_CNF_OUT_PP_AF)<<(4*5);
+     5c4:	401c                	lw	a5,0(s0)
+     5c6:	00b00637          	lui	a2,0xb00
+     5ca:	8fd1                	or	a5,a5,a2
+     5cc:	c01c                	sw	a5,0(s0)
+	GPIOC->CFGLR &= ~(0xf<<(4*6));
+     5ce:	401c                	lw	a5,0(s0)
+     5d0:	f1000637          	lui	a2,0xf1000
+     5d4:	167d                	addi	a2,a2,-1
+     5d6:	8ff1                	and	a5,a5,a2
+     5d8:	c01c                	sw	a5,0(s0)
+	GPIOC->CFGLR |= (GPIO_Speed_50MHz | GPIO_CNF_OUT_PP_AF)<<(4*6);
+     5da:	401c                	lw	a5,0(s0)
+     5dc:	0b000637          	lui	a2,0xb000
+     5e0:	8fd1                	or	a5,a5,a2
+     5e2:	c01c                	sw	a5,0(s0)
+	SPI1->CTLR1 = 
+     5e4:	77f1                	lui	a5,0xffffc
+     5e6:	40013637          	lui	a2,0x40013
+     5ea:	31f78793          	addi	a5,a5,799 # ffffc31f <__global_pointer$+0xdfffbb1f>
+     5ee:	00f61023          	sh	a5,0(a2) # 40013000 <__global_pointer$+0x20012800>
+	SPI1->CTLR1 |= CTLR1_SPE_Set;
+     5f2:	00065783          	lhu	a5,0(a2)
+     5f6:	07c2                	slli	a5,a5,0x10
+     5f8:	83c1                	srli	a5,a5,0x10
+     5fa:	0407e793          	ori	a5,a5,64
+     5fe:	00f61023          	sh	a5,0(a2)
+	memset (screen, 0x20, NLIN*NCOL);	
+     602:	80818513          	addi	a0,gp,-2040 # 20000008 <screen>
+     606:	0c000613          	li	a2,192
+
+	// init spi and display
+	pin_init();
+	LED1_ON();
+     60a:	c80c                	sw	a1,16(s0)
+	memset (screen, 0x20, NLIN*NCOL);	
+     60c:	02000593          	li	a1,32
+     610:	3be9                	jal	3ea <memset>
+  epd_clear();
+  epd_refresh();
+     612:	3989                	jal	264 <epd_refresh>
+	LED1_OFF();
+     614:	001002b7          	lui	t0,0x100
+     618:	00542823          	sw	t0,16(s0)
+	LED2_ON();
+     61c:	08000613          	li	a2,128
+  Delay_Ms(TIME_UPDATE);
+     620:	405f8537          	lui	a0,0x405f8
+	LED2_ON();
+     624:	c810                	sw	a2,16(s0)
+  Delay_Ms(TIME_UPDATE);
+     626:	e0050513          	addi	a0,a0,-512 # 405f7e00 <__global_pointer$+0x205f7600>
+     62a:	3c9d                	jal	a0 <DelaySysTick>
+	LED2_ON();
+     62c:	08000613          	li	a2,128
+	memset (screen, 0x20, NLIN*NCOL);	
+     630:	80818513          	addi	a0,gp,-2040 # 20000008 <screen>
+	LED2_ON();
+     634:	c810                	sw	a2,16(s0)
+	memset (screen, 0x20, NLIN*NCOL);	
+     636:	02000593          	li	a1,32
+     63a:	0c000613          	li	a2,192
+     63e:	3375                	jal	3ea <memset>
+		epd_write(1, 0,  (uint8_t *) "DQSoft 2024");
+     640:	4581                	li	a1,0
+     642:	6a800593          	li	a1,1704
+     646:	4505                	li	a0,1
+     648:	3bc1                	jal	418 <epd_write.constprop.0>
+		epd_write(3, 0,  (uint8_t *) "ABCDEFGHIJKLMNOP");
+     64a:	4581                	li	a1,0
+     64c:	6b400593          	li	a1,1716
+     650:	450d                	li	a0,3
+     652:	33d9                	jal	418 <epd_write.constprop.0>
+		epd_write(4, 0,  (uint8_t *) "QRSTUVWXYZ012345");
+     654:	4581                	li	a1,0
+     656:	6c800593          	li	a1,1736
+     65a:	4511                	li	a0,4
+     65c:	3b75                	jal	418 <epd_write.constprop.0>
+		epd_write(5, 0,  (uint8_t *) "6789[](){}/?;:");
+     65e:	4581                	li	a1,0
+     660:	6dc00593          	li	a1,1756
+     664:	4515                	li	a0,5
+     666:	3b4d                	jal	418 <epd_write.constprop.0>
+		epd_write(7, 0,  (uint8_t *) "Call me Ishmael.");
+     668:	4581                	li	a1,0
+     66a:	6ec00593          	li	a1,1772
+     66e:	451d                	li	a0,7
+     670:	3365                	jal	418 <epd_write.constprop.0>
+		epd_write(8, 0,  (uint8_t *) "Some years ago -");
+     672:	4581                	li	a1,0
+     674:	70000593          	li	a1,1792
+     678:	4521                	li	a0,8
+     67a:	3b79                	jal	418 <epd_write.constprop.0>
+		epd_write(9, 0,  (uint8_t *) "never mind how");
+     67c:	4581                	li	a1,0
+     67e:	71400593          	li	a1,1812
+     682:	4525                	li	a0,9
+     684:	3b51                	jal	418 <epd_write.constprop.0>
+		epd_write(10, 0, (uint8_t *) "long precisely..");
+     686:	4581                	li	a1,0
+     688:	72400593          	li	a1,1828
+     68c:	4529                	li	a0,10
+     68e:	3369                	jal	418 <epd_write.constprop.0>
+		epd_refresh();
+     690:	3ed1                	jal	264 <epd_refresh>
+
+	// Show screen
+	demo_screen();
+	LED2_OFF();
+     692:	00800337          	lui	t1,0x800
+     696:	00642823          	sw	t1,16(s0)
+	LED3_ON();
+     69a:	4691                	li	a3,4
+     69c:	400117b7          	lui	a5,0x40011
+     6a0:	80d7a823          	sw	a3,-2032(a5) # 40010810 <__global_pointer$+0x20010010>
+
+	// Stop
+	POWER_OFF();
+     6a4:	c804                	sw	s1,16(s0)
+	while(1)
+     6a6:	a001                	j	6a6 <main+0x214>
+     6a8:	5144                	lw	s1,36(a0)
+     6aa:	74666f53          	0x74666f53
+     6ae:	3220                	fld	fs0,96(a2)
+     6b0:	3230                	fld	fa2,96(a2)
+     6b2:	0034                	addi	a3,sp,8
+     6b4:	4241                	li	tp,16
+     6b6:	46454443          	fmadd.q	fs0,fa0,ft4,fs0,rmm
+     6ba:	4a494847          	fmsub.d	fa6,fs2,ft4,fs1,rmm
+     6be:	4e4d4c4b          	fnmsub.q	fs8,fs10,ft4,fs1,rmm
+     6c2:	0000504f          	fnmadd.s	ft0,ft0,ft0,ft0,unknown
+     6c6:	0000                	unimp
+     6c8:	5251                	li	tp,-12
+     6ca:	56555453          	0x56555453
+     6ce:	5a595857          	0x5a595857
+     6d2:	3130                	fld	fa2,96(a0)
+     6d4:	3332                	fld	ft6,296(sp)
+     6d6:	3534                	fld	fa3,104(a0)
+     6d8:	0000                	unimp
+     6da:	0000                	unimp
+     6dc:	3736                	fld	fa4,360(sp)
+     6de:	3938                	fld	fa4,112(a0)
+     6e0:	29285d5b          	0x29285d5b
+     6e4:	3f2f7d7b          	0x3f2f7d7b
+     6e8:	00003a3b          	0x3a3b
+     6ec:	6c6c6143          	0x6c6c6143
+     6f0:	6d20                	flw	fs0,88(a0)
+     6f2:	2065                	jal	79a <console_font_12x16+0x62>
+     6f4:	7349                	lui	t1,0xffff2
+     6f6:	6d68                	flw	fa0,92(a0)
+     6f8:	6561                	lui	a0,0x18
+     6fa:	2e6c                	fld	fa1,216(a2)
+     6fc:	0000                	unimp
+     6fe:	0000                	unimp
+     700:	656d6f53          	0x656d6f53
+     704:	7920                	flw	fs0,112(a0)
+     706:	6165                	addi	sp,sp,112
+     708:	7372                	flw	ft6,60(sp)
+     70a:	6120                	flw	fs0,64(a0)
+     70c:	2d206f67          	0x2d206f67
+     710:	0000                	unimp
+     712:	0000                	unimp
+     714:	656e                	flw	fa0,216(sp)
+     716:	6576                	flw	fa0,92(sp)
+     718:	2072                	fld	ft0,280(sp)
+     71a:	696d                	lui	s2,0x1b
+     71c:	646e                	flw	fs0,216(sp)
+     71e:	6820                	flw	fs0,80(s0)
+     720:	0000776f          	jal	a4,7720 <tstcracha.c.3e43e5fa+0x5356>
+     724:	6f6c                	flw	fa1,92(a4)
+     726:	676e                	flw	fa4,216(sp)
+     728:	7020                	flw	fs0,96(s0)
+     72a:	6572                	flw	fa0,28(sp)
+     72c:	65736963          	bltu	t1,s7,d7e <console_font_12x16+0x646>
+     730:	796c                	flw	fa1,116(a0)
+     732:	2e2e                	fld	ft8,200(sp)
+     734:	0000                	unimp
+	...
+
+00000738 <console_font_12x16>:
+     738:	ffff ffff ffff ffff ffff ffff ffff ffff     ................
+     748:	ffff ffff ffff ffff 3ff0 cfcf f7bf 77b3     .........?.....w
+     758:	bb73 bb7f bb73 77b3 f7bf cfcf 3ff0 ffff     s...s..w.....?..
+     768:	3ff0 0fc0 0780 878c 430c 4300 430c 878c     .?.......C.C.C..
+     778:	0780 0fc0 3ff0 ffff ffff fff0 7fe0 3fe0     .....?.........?
+     788:	1ff0 0ff8 1ff0 3fe0 7fe0 fff0 ffff ffff     .......?........
+     798:	ffff fffe 7ffc 3ff8 1ff0 0fe0 1ff0 3ff8     .......?.......?
+     7a8:	7ffc fffe ffff ffff 3ffe 1ffc 1ffc 37e2     .........?.....7
+     7b8:	27c0 07c0 27c0 37e2 1ffc 1ffc 3ffe ffff     .'...'.7.....?..
+     7c8:	ffff 3ffe 1ffc 17f8 27f0 07c0 27f0 17f8     ...?.....'...'..
+     7d8:	1ffc 3ffe ffff ffff ffff ffff ffff ffff     ...?............
+     7e8:	7ffe 3ffc 3ffc 7ffe ffff ffff ffff ffff     ...?.?..........
+	...
+     800:	8001 c003 c003 8001 0000 0000 0000 0000     ................
+     810:	ffff ffff ffff 3ffc dffb eff7 eff7 dffb     .......?........
+     820:	3ffc ffff ffff ffff 0000 0000 0000 c003     .?..............
+     830:	2004 1008 1008 2004 c003 0000 0000 0000     . ..... ........
+     840:	ffff ffe1 ffe7 3fea 1fec cff9 effb effb     .......?........
+     850:	cff9 1ffc 3ffe ffff ffff fff1 efe0 6fce     .....?.........o
+     860:	03df 03df 6fce efe0 fff1 ffff ffff ffff     .....o..........
+     870:	ffff ffff ffe3 ffc1 ff8f 0f00 87ff 87ff     ................
+     880:	cfff ffff ffff ffff ffff ffff 03f0 61e6     ...............a
+     890:	e1cc f399 ff33 1f00 0fff 0fff 9fff ffff     ....3...........
+     8a0:	fffe 6fec 1ff0 9ff3 cfe7 c387 cfe7 9ff3     ...o............
+     8b0:	1ff0 6fec fffe ffff ffff ffff ffff fffe     ...o............
+     8c0:	7ffc 3ff8 1ff0 0fe0 07c0 ffff ffff ffff     ...?............
+     8d0:	ffff ffff ffff 07c0 0fe0 1ff0 3ff8 7ffc     .............?..
+     8e0:	fffe ffff ffff ffff ffff ffff dff7 cfe7     ................
+     8f0:	c7c7 0380 c7c7 cfe7 dff7 ffff ffff ffff     ................
+     900:	ffff ffff ffff 1380 1380 ffff ffff 1380     ................
+     910:	1380 ffff ffff ffff ffff ffbf 0380 0380     ................
+     920:	ffbf 0380 0380 ffbe ff9c ffc1 ffe3 ffff     ................
+     930:	ffff ffff 8fdc 0798 77bb 77bb 77bb 77bb     .........w.w.w.w
+     940:	6780 efc4 ffff ffff ffff e3ff e3ff e3ff     .g..............
+     950:	e3ff e3ff e3ff e3ff e3ff ffff ffff ffff     ................
+     960:	ffff ffff ddef cdcf c58f 0100 c58f cdcf     ................
+     970:	ddef ffff ffff ffff ffff ffff fff7 ffe7     ................
+     980:	ffc7 0380 ffc7 ffe7 fff7 ffff ffff ffff     ................
+     990:	ffff ffff dfff cfff c7ff 0380 c7ff cfff     ................
+     9a0:	dfff ffff ffff ffff ffff fffe 7ffc 3ff8     ...............?
+     9b0:	1ff0 fffe fffe fffe fffe fffe ffff ffff     ................
+     9c0:	ffff fffe fffe fffe fffe fffe 1ff0 3ff8     ...............?
+     9d0:	7ffc fffe ffff ffff ffff fbff fbff fbff     ................
+     9e0:	fbff fbff fbff fbff fbff fbff 03ff ffff     ................
+     9f0:	fffe 7ffc 3ff8 1ff0 fffe fffe fffe 1ff0     .....?..........
+     a00:	3ff8 7ffc fffe ffff dfff 9fff 1fff 1ffe     .?..............
+     a10:	1ffc 1ff8 1ffc 1ffe 1fff 9fff dfff ffff     ................
+     a20:	fffb fff9 fff8 7ff8 3ff8 1ff8 3ff8 7ff8     .........?...?..
+     a30:	fff8 fff9 fffb ffff ffff ffff ffff ffff     ................
+     a40:	ffff ffff ffff ffff ffff ffff ffff ffff     ................
+     a50:	ffff ffff ffff ffff ffc1 3300 3300 ffc1     ...........3.3..
+     a60:	ffff ffff ffff ffff ffff ffff ffff ffc3     ................
+     a70:	ffc3 ffff ffff ffc3 ffc3 ffff ffff ffff     ................
+     a80:	fff7 ff87 bf81 3ff0 07f6 8787 bf81 3ff0     .......?.......?
+     a90:	07f6 87f7 bfff ffff ffff ffff 1fee 0fcc     ................
+     aa0:	cfcc 0300 0300 cfcc cfc0 dfe1 ffff ffff     ................
+     ab0:	ffc7 e3e3 e3f1 e3f8 7ffc 3ffe 1fff 8fe3     ...........?....
+     ac0:	c7e3 e3e3 f3ff ffff ffff bbff 93ff c7c7     ................
+     ad0:	8783 13b8 7b9c 73c0 03e2 07ff ffff ffff     .....{.s........
+     ae0:	ffff ffff ffff ffff ffff ff07 ff03 ff1b     ................
+     af0:	ffff ffff ffff ffff ffff ffff ffff fb7f     ................
+     b00:	fb7f e31f 0780 0fc0 3ff0 ffff ffff ffff     .........?......
+     b10:	ffff ffff ffff 3ff0 0fc0 0780 e31f fb7f     .......?........
+     b20:	fb7f ffff ffff ffff ffff ffff cfe6 8fe2     ................
+     b30:	3ff8 0fe0 0fe0 3ff8 8fe2 cfe6 ffff ffff     .?.....?........
+     b40:	ffff ffff 7ffe 7ffe 7ffe 0ff0 0ff0 7ffe     ................
+     b50:	7ffe 7ffe ffff ffff ffff ffff ffff ffff     ................
+     b60:	ffff e1ff e0ff e2ff ffff ffff ffff ffff     ................
+     b70:	ffff ffff 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe     ................
+     b80:	7ffe 7ffe ffff ffff ffff ffff ffff ffff     ................
+     b90:	ffff e3ff e3ff e3ff ffff ffff ffff ffff     ................
+     ba0:	ff8f ffc7 ffe3 fff1 fff8 7ffc 3ffe 1fff     .............?..
+     bb0:	8fff c7ff e7ff ffff 1fe0 0780 e787 f333     ..............3.
+     bc0:	f339 f33c 733e 333f 879f 0780 1fe0 ffff     9.<.>s?3........
+     bd0:	ffff f3ff f3ff f3ff 0300 0300 f38f f3cf     ................
+     be0:	f3cf ffff ffff ffff f3c7 f383 f311 f338     ..............8.
+     bf0:	733c 333e 133f 833f c31f e387 f3c7 ffff     <s>3?.?.........
+     c00:	8fc3 0781 6318 f33c f33c f33c f33c f33c     .....c<.<.<.<.<.
+     c10:	e31f c78f cfcf ffff 3fff 3fff 0300 0300     .........?.?....
+     c20:	3f1f 3f8f 3fc7 3fe3 3ff1 3ff8 3ffc ffff     .?.?.?.?.?.?.?..
+     c30:	0f3e 073c e338 f339 f339 f339 f339 f339     >.<.8.9.9.9.9.9.
+     c40:	e339 c701 cf03 ffff 0fff 07fe 633c f33c     9...........<c<.
+     c50:	f33c f31c f38c f3c4 63e0 07f0 0ffc ffff     <........c......
+     c60:	ff3f ff0f ff03 ff30 3f3c 0f3f c33f f33f     ?.....0.<??.?.?.
+     c70:	ff3f ff3f ff3f ffff 0fff 07c2 6380 f318     ?.?.?........c..
+     c80:	f33c f33c f33c f318 6380 07c2 0fff ffff     <.<.<....c......
+     c90:	ffc0 3f80 1f18 8f3c c73c e33c f33c f33c     ...?..<.<.<.<.<.
+     ca0:	f318 ff81 ffc3 ffff ffff ffff ffff ffff     ................
+     cb0:	ffff c7f1 c7f1 c7f1 ffff ffff ffff ffff     ................
+     cc0:	ffff ffff ffff ffff ffff c1f1 c0f1 c6f1     ................
+     cd0:	ffff ffff ffff ffff ffff ffff f33f e31f     ............?...
+     ce0:	c78f 8fc7 1fe3 3ff0 7ff8 fffc ffff ffff     .......?........
+     cf0:	ffff 9ff9 9ff9 9ff9 9ff9 9ff9 9ff9 9ff9     ................
+     d00:	9ff9 9ff9 ffff ffff ffff ffff fffc 7ff8     ................
+     d10:	3ff0 1fe3 8fc7 c78f e31f f33f ffff ffff     .?........?.....
+     d20:	ffff ffc7 ff83 ff11 ff38 133c 133e ff3f     ........8.<.>.?.
+     d30:	ff1f ff87 ffc7 ffff 7fe0 3f80 931f 1320     ...........?.. .
+     d40:	1320 9327 1320 3330 e71f 0780 0fe0 ffff      .'. .03........
+     d50:	ffff e3ff 03ff 1ff8 9fc0 9f07 9f07 9fc0     ................
+     d60:	1ff8 03ff e3ff ffff ffff 0fff 07c2 6380     ...............c
+     d70:	f318 f33c f33c f33c f33c 0300 0300 ffff     ..<.<.<.<.......
+     d80:	ffff cfcf c78f e31f f33f f33f f33f e31f     ........?.?.?...
+     d90:	c78f 0fc0 3ff0 ffff ffff 3ff0 0fc0 c78f     .....?.....?....
+     da0:	e31f f33f f33f f33f f33f 0300 0300 ffff     ..?.?.?.?.......
+     db0:	ffff f33f f33f f33c f33c f33c f33c f33c     ..?.?.<.<.<.<.<.
+     dc0:	f33c 0300 0300 ffff ffff ff3f ff3f ff3c     <.........?.?.<.
+     dd0:	ff3c ff3c ff3c ff3c ff3c 0300 0300 ffff     <.<.<.<.<.......
+     de0:	ffff 039c 031c f33c f33c f33c f33f e31f     ......<.<.<.?...
+     df0:	c78f 0fc0 3ff0 ffff ffff 0300 0300 fffc     .....?..........
+     e00:	fffc fffc fffc fffc fffc 0300 0300 ffff     ................
+     e10:	ffff ffff ffff f33f f33f 0300 0300 f33f     ......?.?.....?.
+     e20:	f33f ffff ffff ffff ffff 1f00 0700 e3ff     ?...............
+     e30:	f3ff f3ff f3ff f3ff e3ff 87ff 8fff ffff     ................
+     e40:	ffff f33f e31f c78f 8fc7 1fe3 3ff0 7ff8     ..?..........?..
+     e50:	fffc 0300 0300 ffff ffff f3ff f3ff f3ff     ................
+     e60:	f3ff f3ff f3ff f3ff f3ff 0300 0300 ffff     ................
+     e70:	ffff 0300 0300 ff87 ffe1 7ff8 7ff8 ffe1     ................
+     e80:	ff87 0300 0300 ffff ffff 0300 0300 c7ff     ................
+     e90:	1fff 3ffc fff0 ffe3 ff8f 0300 0300 ffff     ...?............
+     ea0:	ffff 3ff0 0fc0 c78f e31f f33f f33f e31f     ...?......?.?...
+     eb0:	c78f 0fc0 3ff0 ffff ffff ffc1 ff80 7f1c     .....?..........
+     ec0:	7f3e 7f3e 7f3e 7f3e 7f3e 0300 0300 ffff     >.>.>.>.>.......
+     ed0:	ffff 33f0 03c0 c78f 831f 933f f33f e31f     ...3......?.?...
+     ee0:	c78f 0fc0 3ff0 ffff ffff f3c1 e380 471c     .....?.........G
+     ef0:	0f3e 1f3e 3f3e 7f3e 7f3e 0300 0300 ffff     >.>.>?>.>.......
+     f00:	ffff 0fcf 078e 631c f33c f33c f33c f33c     .......c<.<.<.<.
+     f10:	e318 c781 cfc3 ffff ffff ffff ff3f ff3f     ............?.?.
+     f20:	ff3f 0300 0300 ff3f ff3f ff3f ffff ffff     ?.....?.?.?.....
+     f30:	ffff 1f00 0700 e3ff f3ff f3ff f3ff f3ff     ................
+     f40:	e3ff 0700 1f00 ffff ffff ff1f ff03 7fe0     ................
+     f50:	0ffc 83ff 83ff 0ffc 7fe0 ff03 ff1f ffff     ................
+     f60:	ffff 0300 0300 c7ff 9fff 3ffe 3ffe 9fff     ...........?.?..
+     f70:	c7ff 0300 0300 ffff ffff f33f c30f 8fc7     ..........?.....
+     f80:	3ff3 7ff8 7ff8 3ff3 8fc7 c30f f33f ffff     .?.....?....?...
+     f90:	ffff ff3f ff0f ffc3 fff0 03fc 03fc fff0     ..?.............
+     fa0:	ffc3 ff0f ff3f ffff ffff f33f f30f f307     ....?.....?.....
+     fb0:	f333 f338 733c 333f 833f c33f f33f ffff     3.8.<s?3?.?.?...
+     fc0:	ffff ffff ffff f33f f33f f33f f33f 0300     ......?.?.?.?...
+     fd0:	0300 ffff ffff ffff e7ff c7ff 8fff 1fff     ................
+     fe0:	3ffe 7ffc fff8 fff1 ffe3 ffc7 ff8f ffff     .?..............
+     ff0:	ffff ffff ffff 0300 0300 f33f f33f f33f     ..........?.?.?.
+    1000:	f33f ffff ffff ffff fff9 fff1 ffe3 ffc7     ?...............
+    1010:	ff8f ff1f ff8f ffc7 ffe3 fff1 fff9 ffff     ................
+    1020:	fcff fcff fcff fcff fcff fcff fcff fcff     ................
+    1030:	fcff fcff fcff ffff ffff ffff ffff ffff     ................
+    1040:	ff8d ff81 ff83 ffff ffff ffff ffff ffff     ................
+    1050:	ffff 03fc 03f8 33f9 33f9 33f9 33f9 33f9     .......3.3.3.3.3
+    1060:	33f9 83fd c7ff ffff ffff 0ffe 07fc e3f8     .3..............
+    1070:	f3f9 f3f9 f3f9 f3f9 f3fc 0300 0300 ffff     ................
+    1080:	ffff effe e7fc f3f9 f3f9 f3f9 f3f9 f3f9     ................
+    1090:	e3f8 07fc 0ffe ffff ffff 0300 0300 f3fc     ................
+    10a0:	f3f8 f3f9 f3f9 f3f9 e3f8 07fc 0ffe ffff     ................
+    10b0:	ffff 7ffe 37fc 33f9 33f9 33f9 33f9 33f9     .....7.3.3.3.3.3
+    10c0:	23f8 07fc 0ffe ffff ffff ffff ffff ff3f     .#............?.
+    10d0:	ff3c ff3c ff1c 0380 03c0 fffc fffc ffff     <.<.............
+    10e0:	ffff 03f8 01f8 98f9 ccf9 ccf9 ccf9 ccf9     ................
+    10f0:	8cf8 1cfc 3ffe ffff ffff ffff 03fe 03fc     .....?..........
+    1100:	fff8 fff9 fff9 fff9 fffc 0300 0300 ffff     ................
+    1110:	ffff ffff ffff f3ff f3ff 03c8 03c8 f3f9     ................
+    1120:	f3ff ffff ffff ffff ffff ffff ffff 01c8     ................
+    1130:	00c8 fcf9 fcff f8ff f9ff ffff ffff ffff     ................
+    1140:	ffff ffff f3ff e3f9 c7f8 0ffc 1ffe 3fff     ...............?
+    1150:	0300 0300 ffff ffff ffff ffff ffff f3ff     ................
+    1160:	f3ff 0300 0300 f33f f3ff ffff ffff ffff     ......?.........
+    1170:	ffff 03fe 03fc fff8 fff8 03fc 03fc fff8     ................
+    1180:	fff8 03fc 03f8 ffff ffff 03fe 03fc fff8     ................
+    1190:	fff9 fff9 fff9 fff9 03f8 03f8 ffff ffff     ................
+    11a0:	ffff 0ffe 07fc e3f8 f3f9 f3f9 f3f9 f3f9     ................
+    11b0:	e3f8 07fc 0ffe ffff ffff 1ffe 0ffc c7f8     ................
+    11c0:	e7f9 e7f9 e7f9 e7f9 cff9 00f8 00f8 ffff     ................
+    11d0:	ffff 00f8 00f8 cff9 e7f9 e7f9 e7f9 e7f9     ................
+    11e0:	c7f8 0ffc 1ffe ffff ffff fffc fff8 fff9     ................
+    11f0:	fff9 fff9 fff9 fffc 03f8 03f8 ffff ffff     ................
+    1200:	ffff ffff ffff 87fd 03f9 33f9 33f9 33f9     ...........3.3.3
+    1210:	33f9 33f8 77fc ffff ffff ffff ffff f3ff     .3.3.w..........
+    1220:	f3f9 f3f9 f3f9 0380 0780 fff9 fff9 ffff     ................
+    1230:	ffff 03f8 03f8 e7ff f3ff f3ff f3ff f3ff     ................
+    1240:	e3ff 07f8 0ff8 ffff ffff fff9 7ff8 1ffe     ................
+    1250:	87ff e3ff e3ff 87ff 1ffe 7ff8 fff9 ffff     ................
+    1260:	ffff 1ff8 07f8 e3ff c7ff 0ff8 0ff8 c7ff     ................
+    1270:	e3ff 07f8 1ff8 ffff ffff ffff f3f9 e3f8     ................
+    1280:	47fc 0ffe 1fff 0ffe 47fc e3f8 f3f9 ffff     .G.......G......
+    1290:	ffff ffff fff9 7ff8 1ffe 87ff 81ff 18fe     ................
+    12a0:	7ef8 fff9 ffff ffff ffff ffff f3fb f3f9     .~..............
+    12b0:	f3f8 73f8 33f9 93f9 c3f9 e3f9 f3f9 ffff     ...s.3..........
+    12c0:	ffff ffff f93f f93f f93f f11f 0381 07c0     ....?.?.?.......
+    12d0:	7ffc fffe ffff ffff ffff ffff ffff ffff     ................
+    12e0:	ffff 0300 0300 ffff ffff ffff ffff ffff     ................
+    12f0:	ffff ffff fffe 7ffc 07c0 0381 f11f f93f     ..............?.
+    1300:	f93f f93f ffff ffff ffff ffdf ffcf ffe7     ?.?.............
+    1310:	fff7 ffe7 ffcf ffdf ffcf ffe7 fff7 ffff     ................
+    1320:	ffff 0fff 0ffe cffc cff9 cff3 cff3 cff9     ................
+    1330:	cffc 0ffe 0fff ffff ffff 9fc7 8f87 c71f     ................
+    1340:	e73f e03f e03f c41f 8c8f 1fc0 7ff0 ffff     ?.?.?...........
+    1350:	ffff 03f8 03f8 e7cf f3cf f3ff f3ff f3cf     ................
+    1360:	e3cf 07f8 0ff8 ffff ffff 3ffe 37fc 33b9     ...........?.7.3
+    1370:	3399 33c9 33e9 33f9 23f8 07fc 0ffe ffff     .3.3.3.3.#......
+    1380:	ffff 03fc 03f8 33e9 33c9 3399 3399 33c9     .......3.3.3.3.3
+    1390:	33e9 83fd c7ff ffff ffff 03fc 03f8 33c9     .3.............3
+    13a0:	33c9 33f9 33f9 33c9 33c9 83fd c7ff ffff     .3.3.3.3.3......
+    13b0:	ffff 03fc 03f8 33f9 33e9 33c9 3399 33b9     .......3.3.3.3.3
+    13c0:	33f9 83fd c7ff ffff ffff 03fc 03f8 33f9     .3.............3
+    13d0:	33d9 33a9 33a9 33d9 33f9 83fd c7ff ffff     .3.3.3.3.3......
+    13e0:	ffff effe e7fc e3f8 f3f9 f0f9 f0f9 f2f9     ................
+    13f0:	e2f8 07fc 0ffe ffff ffff 3ffe 37fc 33e9     ...........?.7.3
+    1400:	33c9 3399 3399 33c9 33e8 07fc 0ffe ffff     .3.3.3.3.3......
+    1410:	ffff 3ffe 37fc 33c9 33c9 33f9 33f9 33c9     ...?.7.3.3.3.3.3
+    1420:	33c8 07fc 0ffe ffff ffff 3ffe 37fc 33f9     .3.........?.7.3
+    1430:	33e9 33c9 3399 33b9 33f8 07fc 0ffe ffff     .3.3.3.3.3......
+    1440:	ffff ffff ffff f3ff f3cf 03c8 03f8 f3c9     ................
+    1450:	f3cf ffff ffff ffff ffff ffff ffff f3ef     ................
+    1460:	f3cf 0398 0398 f3c9 f3ef ffff ffff ffff     ................
+    1470:	ffff ffff ffff f3ff f3ef 03c8 0398 f3b9     ................
+    1480:	f3ff ffff ffff ffff ffff e3ff 83ff 0f3e     ..............>.
+    1490:	4f38 cfe1 cfe1 4f38 0f3e 83ff e3ff ffff     8O....8O>.......
+    14a0:	ffff e3ff 83ff 0ffe 4fb8 cf51 cf51 4fb8     .........OQ.Q..O
+    14b0:	0ffe 83ff e3ff ffff ffff f3e7 f3e7 7366     ..............fs
+    14c0:	7326 7386 73c6 73e6 73e6 03e0 03e0 ffff     &s.s.s.s.s......
+    14d0:	ffff 77fe 33fc bbfd bbfd 03fe 07fc bbfd     ...w.3..........
+    14e0:	bbfd 83fc c7fe ffff ffff f33f f33c f33c     ..........?.<.<.
+    14f0:	0300 0300 9f07 9fc1 1ff0 03fe c3ff ffff     ................
+    1500:	ffff 0ffe 07fc e3e8 f3c9 f399 f399 f3c9     ................
+    1510:	e3e8 07fc 0ffe ffff ffff 0ffe 07fc e3c8     ................
+    1520:	f3c9 f3f9 f3f9 f3c9 e3c8 07fc 0ffe ffff     ................
+    1530:	ffff 0ffe 07fc e3f8 f3e9 f3c9 f399 f3b9     ................
+    1540:	e3f8 07fc 0ffe ffff ffff 03f8 03f8 e7ef     ................
+    1550:	f3cf f39f f39f f3cf e3ef 07f8 0ff8 ffff     ................
+    1560:	ffff 03f8 03f8 e7ff f3ef f3cf f39f f3bf     ................
+    1570:	e3ff 07f8 0ff8 ffff ffff ffff 3ff8 0fc8     .............?..
+    1580:	c7cf e1ff e0ff cccf 1cc8 3cf8 ffff ffff     ...........<....
+    1590:	ffff 0ff8 07f0 e323 f327 f3e7 f3e7 f3e7     ......#.'.......
+    15a0:	e323 0730 0ff8 ffff ffff 03f8 03f8 e7cf     #.0.............
+    15b0:	f3cf f3ff f3ff f3cf e3cf 07f8 0ff8 ffff     ................
+    15c0:	ffff ffff 9ff3 8fe3 cfe7 0380 0380 8fe3     ................
+    15d0:	1ff0 3ff8 ffff ffff ffff efff e7e7 e7c7     ...?............
+    15e0:	e7ce e7ce 2fc0 07e0 c7fe e7ff ffff ffff     ...../..........
+    15f0:	ffff ff3f af0f afc3 aff0 03fc 03fc aff0     ..?.............
+    1600:	afc3 af0f ff3f ffff ffff bbff bbff 03fe     ....?...........
+    1610:	07fe bff1 ffe0 ffee ffee 03e0 03e0 ffff     ................
+    1620:	ffff ffff ff9f ff1e ff3e 0300 0180 f9fe     ........>.......
+    1630:	f1fe f3ff ffff ffff ffff 03fc 03f8 33f9     ...............3
+    1640:	33b9 3399 33c9 33e9 33f9 83fd c7ff ffff     .3.3.3.3.3......
+    1650:	ffff ffff ffff f3ff f3bf 0398 03c8 f3e9     ................
+    1660:	f3ff ffff ffff ffff ffff 0ffe 07fc e3f8     ................
+    1670:	f3b9 f399 f3c9 f3e9 e3f8 07fc 0ffe ffff     ................
+    1680:	ffff 03f8 03f8 e7ff f3bf f39f f3cf f3ef     ................
+    1690:	e3ff 07f8 0ff8 ffff ffff 03fe 03dc ffc8     ................
+    16a0:	ffe9 ffc9 ffd9 ffc9 03e8 03f8 ffff ffff     ................
+    16b0:	ffff 03e0 0360 8f3f 1fbf 3f3e 7f7c ff38     ....`.?...>?|.8.
+    16c0:	ffb1 03e0 03e0 ffff ffff ff80 9f00 9f24     ..............$.
+    16d0:	9f24 9f24 9f24 9f24 9f24 9fa0 fff1 ffff     $.$.$.$.$.......
+    16e0:	ffff ffc3 9f81 9f18 9f3c 9f3c 9f3c 9f3c     ........<.<.<.<.
+    16f0:	9f18 9f81 ffc3 ffff ffff 8fff 87ff e3ff     ................
+    1700:	f3ff f321 f320 73fc 23fe 07ff 8fff ffff     ..!. ..s.#......
+    1710:	ffe7 ffe7 ffe7 ffe7 ffe7 ffe7 ffe7 ffe7     ................
+    1720:	ffe7 7fe0 7fe0 ffff ffff 3fe0 3fe0 ffe7     ...........?.?..
+    1730:	ffe7 ffe7 ffe7 ffe7 ffe7 ffe7 ffe7 ffe7     ................
+    1740:	ffff b7ff 17f7 47f3 67f9 fffc 7ffe 3ffd     .......G.g.....?
+    1750:	9fc1 dfc1 ffed ffff ffff 07ff 07f7 dff3     ................
+    1760:	1ff9 9ffc 7ffe 3ffd 9fc1 dfc1 ffed ffff     .......?........
+    1770:	ffff ffff ffff ffff 0ffe 0330 0330 0ffe     ..........0.0...
+    1780:	ffff ffff ffff ffff ffff ffff bffb 3ff9     ...............?
+    1790:	7ffc fffe ffff bffb 3ff9 7ffc fffe ffff     .........?......
+    17a0:	ffff ffff fffe 7ffc 3ff9 bffb ffff fffe     .........?......
+    17b0:	7ffc 3ff9 bffb ffff ffff aaaa ffff 5555     ...?..........UU
+    17c0:	ffff aaaa ffff 5555 ffff aaaa ffff 5555     ......UU......UU
+    17d0:	5555 aaaa 5555 aaaa 5555 aaaa 5555 aaaa     UU..UU..UU..UU..
+    17e0:	5555 aaaa 5555 aaaa 0000 5555 0000 aaaa     UU..UU....UU....
+    17f0:	0000 5555 0000 aaaa 0000 5555 0000 aaaa     ..UU......UU....
+    1800:	ffff ffff ffff ffff ffff 0000 0000 ffff     ................
+    1810:	ffff ffff ffff ffff ffff ffff ffff ffff     ................
+    1820:	ffff 0000 0000 7ffe 7ffe 7ffe 7ffe 7ffe     ................
+    1830:	ffff ffff ffff ffff ffff 0000 0000 9ffc     ................
+    1840:	9ffc 9ffc 9ffc 9ffc ffff ffff ffff ffff     ................
+    1850:	ffff 0000 0000 ffff 0000 0000 7ffe 7ffe     ................
+    1860:	ffff ffff ffff ffff ffff 00fe 00fe 7ffe     ................
+    1870:	00fe 00fe 7ffe 7ffe ffff ffff ffff ffff     ................
+    1880:	ffff 00fc 00fc 9ffc 9ffc 9ffc 9ffc 9ffc     ................
+    1890:	ffff ffff ffff ffff ffff 0000 0000 ffff     ................
+    18a0:	8000 8000 9ffc 9ffc ffff ffff ffff ffff     ................
+    18b0:	ffff 0000 0000 ffff 0000 0000 ffff ffff     ................
+    18c0:	ffff ffff ffff ffff ffff 00fc 00fc fffc     ................
+    18d0:	80fc 80fc 9ffc 9ffc ffff ffff ffff ffff     ................
+    18e0:	ffff 1f00 1f00 9fff 9f00 9f00 9ffc 9ffc     ................
+    18f0:	ffff ffff ffff ffff ffff 7f00 7f00 7ffe     ................
+    1900:	7f00 7f00 7ffe 7ffe ffff ffff ffff ffff     ................
+    1910:	ffff 1f00 1f00 9ffc 9ffc 9ffc 9ffc 9ffc     ................
+    1920:	ffff ffff ffff ffff ffff 00fe 00fe 7ffe     ................
+    1930:	7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe     ................
+    1940:	7ffe 7f00 7f00 ffff ffff ffff ffff ffff     ................
+    1950:	7ffe 7ffe 7ffe 7ffe 7ffe 7f00 7f00 7ffe     ................
+    1960:	7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe     ................
+    1970:	7ffe 00fe 00fe 7ffe 7ffe 7ffe 7ffe 7ffe     ................
+    1980:	7ffe 7ffe 7ffe 7ffe 7ffe 0000 0000 ffff     ................
+    1990:	ffff ffff ffff ffff 7ffe 7ffe 7ffe 7ffe     ................
+    19a0:	7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe     ................
+    19b0:	7ffe 7ffe 7ffe 7ffe 7ffe 0000 0000 7ffe     ................
+    19c0:	7ffe 7ffe 7ffe 7ffe 9ffc 9ffc 9ffc 9ffc     ................
+    19d0:	9ffc 0000 0000 ffff ffff ffff ffff ffff     ................
+    19e0:	7ffe 7ffe 7ffe 7ffe 7ffe 0000 0000 ffff     ................
+    19f0:	0000 0000 ffff ffff 9ffc 9ffc 9ffc 9ffc     ................
+    1a00:	9ffc 9f00 9f00 9fff 1f00 1f00 ffff ffff     ................
+    1a10:	9ffc 9ffc 9ffc 9ffc 9ffc 80fc 80fc fffc     ................
+    1a20:	00fc 00fc ffff ffff 9ffc 9ffc 9ffc 9ffc     ................
+    1a30:	9ffc 9f00 9f00 9fff 9f00 9f00 9ffc 9ffc     ................
+    1a40:	9ffc 9ffc 9ffc 9ffc 9ffc 80fc 80fc fffc     ................
+    1a50:	80fc 80fc 9ffc 9ffc 9ffc 9ffc 9ffc 9ffc     ................
+    1a60:	9ffc 8000 8000 ffff 0000 0000 ffff ffff     ................
+    1a70:	9ffc 9ffc 9ffc 9ffc 9ffc 9ffc 9ffc 9ffc     ................
+    1a80:	9ffc 9ffc 9ffc 9ffc 9ffc 9ffc 9ffc 9ffc     ................
+    1a90:	9ffc 8000 8000 ffff 8000 8000 9ffc 9ffc     ................
+    1aa0:	9ffc 9ffc 9ffc 9ffc 9ffc 9f00 9f00 9ffc     ................
+    1ab0:	9ffc 9ffc 9ffc 9ffc 7ffe 7ffe 7ffe 7ffe     ................
+    1ac0:	7ffe 7f00 7f00 7ffe 7f00 7f00 7ffe 7ffe     ................
+    1ad0:	9ffc 9ffc 9ffc 9ffc 9ffc 80fc 80fc 9ffc     ................
+    1ae0:	9ffc 9ffc 9ffc 9ffc 7ffe 7ffe 7ffe 7ffe     ................
+    1af0:	7ffe 00fe 00fe 7ffe 00fe 00fe 7ffe 7ffe     ................
+    1b00:	7ffe 7ffe 7ffe 7ffe 7ffe 7f00 7f00 7ffe     ................
+    1b10:	7f00 7f00 ffff ffff 9ffc 9ffc 9ffc 9ffc     ................
+    1b20:	9ffc 1f00 1f00 ffff ffff ffff ffff ffff     ................
+    1b30:	9ffc 9ffc 9ffc 9ffc 9ffc 00fc 00fc ffff     ................
+    1b40:	ffff ffff ffff ffff 7ffe 7ffe 7ffe 7ffe     ................
+    1b50:	7ffe 00fe 00fe 7ffe 00fe 00fe ffff ffff     ................
+    1b60:	7ffe 7ffe 7ffe 7ffe 7ffe 0000 0000 ffff     ................
+    1b70:	0000 0000 7ffe 7ffe 9ffc 9ffc 9ffc 9ffc     ................
+    1b80:	9ffc 8000 8000 9ffc 9ffc 9ffc 9ffc 9ffc     ................
+    1b90:	ffff ffff ffff ffff ffff 7f00 7f00 7ffe     ................
+    1ba0:	7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe 7ffe     ................
+    1bb0:	7ffe 00fe 00fe ffff ffff ffff ffff ffff     ................
+	...
+    1bd8:	00ff 00ff 00ff 00ff 00ff 00ff 00ff 00ff     ................
+    1be8:	00ff 00ff 00ff 00ff ffff ffff ffff ffff     ................
+    1bf8:	ffff ffff 0000 0000 0000 0000 0000 0000     ................
+	...
+    1c14:	ffff ffff ffff ffff ffff ffff ff00 ff00     ................
+    1c24:	ff00 ff00 ff00 ff00 ff00 ff00 ff00 ff00     ................
+    1c34:	ff00 ff00 ffff ffff 73fe 27ff 8fff 27ff     .........s.'...'
+    1c44:	73fe 73fe 27ff 8fff ffff ffff ffff ffff     .s.s.'..........
+    1c54:	87fc 03f8 33f3 7bf7 7bf7 7bf3 00f8 00fc     .....3.{.{.{....
+    1c64:	ffff ffff ffff ff8f ff8f ff9f ff9f ff9f     ................
+    1c74:	ff9f ff9f 0380 0380 ffff ffff ffdf ffcf     ................
+    1c84:	ffcf 03c0 03c0 ffcf ffcf 03c0 03c0 ffcf     ................
+    1c94:	ffef ffff ffff e38f e38f f39e 739c 3398     .............s.3
+    1ca4:	1391 8383 c387 e38f ffff ffff ffff fff9     ................
+    1cb4:	0ff9 07f8 e3f8 f3f9 f3f9 f3f9 e3f8 07fc     ................
+    1cc4:	0ffe ffff ffff ffff 0ff0 0ff0 9fff cfff     ................
+    1cd4:	cfff cfff 8fff 00f0 00f0 ffff ffff fff9     ................
+    1ce4:	fff9 fffc 7ffe 0ffe 03fc e3f9 fff8 fffc     ................
+    1cf4:	ffff ffff ffff 7ffc 3ff0 1b63 9b67 8307     .........?c.g...
+    1d04:	8307 9b67 1b63 3ff0 7ff8 ffff ffff ffff     ..g.c..?........
+    1d14:	0ff8 07e0 63c6 73ce 73ce 63c6 07e0 0ff0     .....c.s.s.c....
+    1d24:	ffff ffff ffff 73fc 33f8 83f3 c7e7 ffe7     .......s.3......
+    1d34:	c7e7 83f3 33f8 73fc ffff ffff ffff ffff     .....3.s........
+    1d44:	ffff 87e7 03cf 33ce 33cc 83c0 c7e1 ffff     .......3.3......
+    1d54:	ffff ffff ffff 3ffe 1ffc dffd 9ffc 3ffe     .......?.......?
+    1d64:	3ffe 9ffc dffd 1ffc 3ffe ffff ffff 1fff     .?.......?......
+    1d74:	0fe4 c7e0 67f8 07f8 87f9 c1f8 09fc 1ffe     .....g..........
+    1d84:	ffff ffff ffff ffff f33f f33c f33c f33c     ........?.<.<.<.
+    1d94:	e79c c78c 0fc0 3ff0 ffff ffff ffff ffff     .......?........
+    1da4:	ffff 03e0 03c0 ff8f ff9f ff8f 03c0 03e0     ................
+    1db4:	ffff ffff ffff ffff 67e6 67e6 67e6 67e6     .........g.g.g.g
+    1dc4:	67e6 67e6 67e6 67e6 ffff ffff ffff ffff     .g.g.g.g........
+    1dd4:	ffff e7fc e7fc 27f0 27f0 e7fc e7fc ffff     .......'.'......
+    1de4:	ffff ffff ffff f3f9 f3f0 f3f0 73e6 73e6     .............s.s
+    1df4:	33cf 33cf 939f 939f ffff ffff ffff 93cf     .3.3............
+    1e04:	93cf 33e7 33e7 73f2 73f2 f3f8 f3f8 f3fd     ...3.3.s.s......
+    1e14:	ffff ffff ffc7 ff87 ff1f ff3f ff1f 0080     ..........?.....
+    1e24:	00c0 ffff ffff ffff ffff ffff ffff ffff     ................
+    1e34:	ffff ffff ffff 0300 0100 f8ff fcff f8ff     ................
+    1e44:	e1ff e3ff ffff ffff 7ffe 7ffe 7ffe 4ff2     ...............O
+    1e54:	4ff2 7ffe 7ffe 7ffe ffff ffff ffff 9ff9     .O..............
+    1e64:	9ff9 cffc cffc 9ff9 9ff9 3ff3 3ff3 9ff9     ...........?.?..
+    1e74:	9ff9 ffff ffff ffff ffff ff87 ff03 ff33     ..............3.
+    1e84:	ff33 ff03 ff87 ffff ffff ffff ffff ffff     3...............
+    1e94:	ffff 3ffc 1ff8 1ff8 1ff8 1ff8 3ffc ffff     ...?.........?..
+    1ea4:	ffff ffff ffff ffff ffff ffff 7ffe 3ffc     ...............?
+    1eb4:	7ffe ffff ffff ffff ffff ffff ff9f ff9f     ................
+    1ec4:	ff9f ff9f 0380 0380 e7ff cfff 9fff 3fff     ...............?
+    1ed4:	ffff ffff ffff ffff ffff ffff ffff ff87     ................
+    1ee4:	ff07 ff3f ff87 ff07 ffff ffff ffff ffff     ..?.............
+    1ef4:	ffff ffff ffff ffb7 ff17 ff57 ff47 ff67     ..........W.G.g.
+    1f04:	ffff ffff ffff ffff ffff ffff 3ff0 3ff0     .............?.?
+    1f14:	3ff0 3ff0 ffff ffff ffff ffff ffff ffff     .?.?............
+    1f24:	ffff ffff ffff ffff ffff ffff ffff ffff     ................
+    1f34:	ffff ffff                                   ....
