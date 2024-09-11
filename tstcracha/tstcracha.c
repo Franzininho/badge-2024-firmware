@@ -40,12 +40,12 @@
 
 #define LED4_PORT 				GPIOA
 #define LED4_PIN					1
-#define LED4_ON()					LED3_PORT->BSHR = (1 << (LED3_PIN))
-#define LED4_OFF()				LED3_PORT->BSHR = (1 << (16+LED3_PIN))
+#define LED4_ON()					LED3_PORT->BSHR = (1 << (LED4_PIN))
+#define LED4_OFF()				LED3_PORT->BSHR = (1 << (16+LED4_PIN))
 
-#define BTN_PORT 				GPIOC
-#define BTN_PIN					3
-#define BTN_PRESSED()   ((BTN_PORT->INDR & (1 <<(BTN_PIN))) == 0)
+#define SW1_PORT 				GPIOC
+#define SW1_PIN					3
+#define SW1_PRESSED()   ((SW1_PORT->INDR & (1 <<(SW1_PIN))) == 0)
 
 
 // Display connections
@@ -99,11 +99,6 @@ void pin_init() {
 	// Enable GPIOD, GPIOC, GPIOA and SPI
 	RCC->APB2PCENR |= RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOA | RCC_APB2Periph_SPI1;
 
-	// set up GPIO for SHUTDOWN
-	SHUTDOWN_PORT->CFGLR &= ~(0xf<<(4*SHUTDOWN_PIN));
-	SHUTDOWN_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*SHUTDOWN_PIN);
-	POWER_ON();
-
 	// set up GPIO for LEDs
 	LED1_PORT->CFGLR &= ~(0xf<<(4*LED1_PIN));
 	LED1_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*LED1_PIN);
@@ -119,8 +114,8 @@ void pin_init() {
 	LED4_OFF();
 
 	// set up GPIO for User Button
-	BTN_PORT->CFGLR &= ~0xf<<(4*BTN_PIN);
-	BTN_PORT->CFGLR |= (GPIO_Speed_In | GPIO_CNF_IN_FLOATING)<<(4*BTN_PIN);
+	SW1_PORT->CFGLR &= ~0xf<<(4*SW1_PIN);
+	SW1_PORT->CFGLR |= (GPIO_Speed_In | GPIO_CNF_IN_FLOATING)<<(4*SW1_PIN);
 
 	// set up GPIO for reset, chip select, data/cmd and busy
 	EPAPER_RST_PORT->CFGLR &= ~(0xf<<(4*EPAPER_RST_PIN));
@@ -416,17 +411,25 @@ int main() {
 	// init spi and display
 	pin_init();
 	LED1_ON();
-  epd_clear();
-  epd_refresh();
+	Delay_Ms(100);
+
+	// set up GPIO for SHUTDOWN
+	SHUTDOWN_PORT->CFGLR &= ~(0xf<<(4*SHUTDOWN_PIN));
+	SHUTDOWN_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP)<<(4*SHUTDOWN_PIN);
+	POWER_ON();
+
 	LED1_OFF();
 	LED2_ON();
+  epd_clear();
+  epd_refresh();
   Delay_Ms(TIME_UPDATE);
-	LED2_ON();
+	LED2_OFF();
+	LED3_ON();
 
 	// Show screen
 	demo_screen();
-	LED2_OFF();
-	LED3_ON();
+	LED3_OFF();
+	LED4_ON();
 
 	// Stop
 	POWER_OFF();

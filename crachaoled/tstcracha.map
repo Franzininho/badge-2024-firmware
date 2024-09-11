@@ -1,0 +1,225 @@
+
+tstcracha.elf:     file format elf32-littleriscv
+
+SYMBOL TABLE:
+00000000 l    d  .init	00000000 .init
+000000a0 l    d  .text	00000000 .text
+00001728 l    d  .fini	00000000 .fini
+20000000 l    d  .dalign	00000000 .dalign
+00001728 l    d  .dlalign	00000000 .dlalign
+20000000 l    d  .data	00000000 .data
+20000000 l    d  .bss	00000000 .bss
+00000000 l    d  .riscv.attributes	00000000 .riscv.attributes
+00000000 l    d  .debug_info	00000000 .debug_info
+00000000 l    d  .debug_abbrev	00000000 .debug_abbrev
+00000000 l    d  .debug_loc	00000000 .debug_loc
+00000000 l    d  .debug_aranges	00000000 .debug_aranges
+00000000 l    d  .debug_ranges	00000000 .debug_ranges
+00000000 l    d  .debug_line	00000000 .debug_line
+00000000 l    d  .debug_str	00000000 .debug_str
+00000000 l    d  .debug_frame	00000000 .debug_frame
+00000000 l    d  .debug_line_str	00000000 .debug_line_str
+00000000 l    df *ABS*	00000000 
+0000011e l     F .text	0000009a mini_pad
+000001b8 l     F .text	00000016 DelaySysTick
+000001ce l     F .text	000000be mini_itoa.part.0
+0000028c l     F .text	0000005c ssd1306_i2c_setup
+000002e8 l     F .text	00000046 ssd1306_drawPixel
+0000032e l     F .text	00000096 ssd1306_drawstr.constprop.0
+00000dec l     O .text	00000800 fontdata
+000003c4 l     F .text	0000000a internal_handle_input.constprop.0
+000003ce l     F .text	000000d2 _write.constprop.0
+000004a0 l     F .text	00000014 __puts_uart
+00000552 l     F .text	000001ae mini_vpprintf
+00000726 l     F .text	00000020 ssd1306_i2c_error.isra.0
+00000746 l     F .text	00000116 ssd1306_i2c_send.constprop.0.isra.0
+0000085c l     F .text	0000001a ssd1306_cmd
+000008a4 l     F .text	00000060 ssd1306_refresh
+00000904 l     F .text	000001b4 show_screen
+00000000 l     F .init	0000009c InterruptVectorDefault
+20000000 l     O .bss	00000400 ssd1306_buffer
+00000dd8 l     O .text	00000014 errstr
+000015ec l     O .text	0000001a ssd1306_init_array
+00001608 l     O .text	00000120 storm
+00000000 l    df *ABS*	00000000 div.o
+000000a0 l       .text	00000000 $xrv32e1p9_c2p0
+00000000 l    df *ABS*	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+000016a5 l       .debug_info	00000000 
+00000000 l    df *ABS*	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00002540 l       .debug_info	00000000 
+00000700 g     F .text	00000026 printf
+20000800 g       .data	00000000 __global_pointer$
+00000530 g     F .text	00000002 TIM1_CC_IRQHandler
+00000530 g     F .text	00000002 HardFault_Handler
+00000530 g     F .text	00000002 SysTick_Handler
+00000530 g     F .text	00000002 PVD_IRQHandler
+00000532 g     F .text	0000000e NMI_Handler
+20000000 g       .bss	00000000 _sbss
+00000888 g     F .text	0000001c memcpy
+00000000 g     F .init	0000009c InterruptVector
+000000a8 g     F .text	0000002c .hidden __hidden___udivsi3
+000000a8 g     F .text	0000002c .hidden __udivsi3
+000000a0 g       .init	00000000 _einit
+00000530 g     F .text	00000002 SPI1_IRQHandler
+00000530 g     F .text	00000002 AWU_IRQHandler
+00000530 g     F .text	00000002 EXTI7_0_IRQHandler
+00000530 g     F .text	00000002 DMA1_Channel4_IRQHandler
+00000530 g     F .text	00000002 ADC1_IRQHandler
+20000400 g       .bss	00000000 _ebss
+00000530 g     F .text	00000002 DMA1_Channel7_IRQHandler
+000000d4 g     F .text	00000008 .hidden __umodsi3
+00000530 g     F .text	00000002 I2C1_EV_IRQHandler
+00000530 g     F .text	00000002 DMA1_Channel6_IRQHandler
+00000530 g     F .text	00000002 RCC_IRQHandler
+00000530 g     F .text	00000002 TIM1_TRG_COM_IRQHandler
+00000530 g     F .text	00000002 DMA1_Channel1_IRQHandler
+00000530 g     F .text	00000002 DefaultIRQHandler
+20000000 g       .dalign	00000000 _data_vma
+00000532 g     F .text	0000000e NMI_RCC_CSS_IRQHandler
+00000876 g     F .text	00000012 memset
+00000b10 g     F .text	00000216 main
+00002540  w      .debug_info	00000000 .hidden tstcracha.c.b3ef1d14
+00000530 g     F .text	00000002 DMA1_Channel5_IRQHandler
+000000a0 g     F .text	00000058 .hidden __divsi3
+00000ab8 g     F .text	00000058 SystemInit
+00000000 g       .init	00000000 _sinit
+000016a5  w      .debug_info	00000000 .hidden ch32v003fun.c.4f51af8d
+00000530 g     F .text	00000002 DMA1_Channel3_IRQHandler
+00000530 g     F .text	00000002 TIM1_UP_IRQHandler
+00000530 g     F .text	00000002 WWDG_IRQHandler
+00000530 g     F .text	00000002 TIM2_IRQHandler
+20000800 g       .bss	00000000 _eusrstack
+00000530 g     F .text	00000002 SW_Handler
+00000530 g     F .text	00000002 TIM1_BRK_IRQHandler
+20000000 g       .data	00000000 _edata
+00001728 g       .dlalign	00000000 _data_lma
+000000f8 g     F .text	00000024 .hidden __modsi3
+00000530 g     F .text	00000002 DMA1_Channel2_IRQHandler
+000004b4 g     F .text	0000007c handle_reset
+00000530 g     F .text	00000002 FLASH_IRQHandler
+00000530 g     F .text	00000002 USART1_IRQHandler
+00000540 g     F .text	00000012 strlen
+00000530 g     F .text	00000002 I2C1_ER_IRQHandler
+
+
